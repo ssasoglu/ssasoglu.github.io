@@ -6,18 +6,18 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="HandheldFriendly" content="True">
     <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=5" />
-    <meta name="description" content="With the change in Docker licensing, Docker Desktop will require a license for large organizations.As soon as I saw this change, I started looking for alternatives to run docker images on my Mac and i">
+    <meta name="description" content="As you may have heard, with the change in Docker licensing Docker-Desktop will require a license for large organizations. As soon as I saw this change, I started looking for alternatives to run docker">
 <meta name="keywords" content="docker,docker-desktop,minikube,sourcegraph,volume,persisted-volume">
 <meta property="og:type" content="article">
 <meta property="og:title" content="Moving away from Docker Desktop and Running docker containers on Minikube">
 <meta property="og:url" content="https://selcuksasoglu.com/2021/11/06/moving-away-from-docker-desktop/index.html">
 <meta property="og:site_name" content="Selcuk Sasoglu">
-<meta property="og:description" content="With the change in Docker licensing, Docker Desktop will require a license for large organizations.As soon as I saw this change, I started looking for alternatives to run docker images on my Mac and i">
+<meta property="og:description" content="As you may have heard, with the change in Docker licensing Docker-Desktop will require a license for large organizations. As soon as I saw this change, I started looking for alternatives to run docker">
 <meta property="og:locale" content="en">
-<meta property="og:updated_time" content="2021-11-06T20:01:43.640Z">
+<meta property="og:updated_time" content="2021-11-06T20:07:45.341Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="Moving away from Docker Desktop and Running docker containers on Minikube">
-<meta name="twitter:description" content="With the change in Docker licensing, Docker Desktop will require a license for large organizations.As soon as I saw this change, I started looking for alternatives to run docker images on my Mac and i">
+<meta name="twitter:description" content="As you may have heard, with the change in Docker licensing Docker-Desktop will require a license for large organizations. As soon as I saw this change, I started looking for alternatives to run docker">
     
     
       
@@ -45,6 +45,8 @@
     <!-- rss -->
     
     
+	<!-- mathjax -->
+	
 </head>
 
 <body class="max-width mx-auto px3 ltr">
@@ -52,19 +54,19 @@
       <div id="header-post">
   <a id="menu-icon" href="#" aria-label="Menu"><i class="fas fa-bars fa-lg"></i></a>
   <a id="menu-icon-tablet" href="#" aria-label="Menu"><i class="fas fa-bars fa-lg"></i></a>
-  <a id="top-icon-tablet" href="#" "Top" onclick="$('html, body').animate({ scrollTop: 0 }, 'fast');" style="display:none;"><i class="fas fa-chevron-up fa-lg"></i></a>
+  <a id="top-icon-tablet" href="#" aria-label="Top" onclick="$('html, body').animate({ scrollTop: 0 }, 'fast');" style="display:none;"><i class="fas fa-chevron-up fa-lg"></i></a>
   <span id="menu">
     <span id="nav">
       <ul>
-         
-          <li><a href="/">Home</a></li>
-         
-          <li><a href="/about/">About</a></li>
-         
-          <li><a href="/archives/">Writing</a></li>
-         
-          <li><a href="https://github.com/ssasoglu">Projects</a></li>
-        
+        <!--
+       --><li><a href="/">Home</a></li><!--
+     --><!--
+       --><li><a href="/about/">About</a></li><!--
+     --><!--
+       --><li><a href="/archives/">Writing</a></li><!--
+     --><!--
+       --><li><a href="https://github.com/ssasoglu">Projects</a></li><!--
+     -->
       </ul>
     </span>
     <br/>
@@ -72,10 +74,10 @@
       <ul>
         
         
-        <li><a class="icon" aria-label="Next post " href="/2020/06/11/index-fragmentation/"><i class="fas fa-chevron-right" aria-hidden="true" onmouseover="$('#i-next').toggle();" onmouseout="$('#i-next').toggle();"></i></a></li>
+        <li><a class="icon" aria-label="Next post" href="/2020/06/11/index-fragmentation/"><i class="fas fa-chevron-right" aria-hidden="true" onmouseover="$('#i-next').toggle();" onmouseout="$('#i-next').toggle();"></i></a></li>
         
-        <li><a class="icon" aria-label="Back to top " href="#" onclick="$('html, body').animate({ scrollTop: 0 }, 'fast');"><i class="fas fa-chevron-up" aria-hidden="true" onmouseover="$('#i-top').toggle();" onmouseout="$('#i-top').toggle();"></i></a></li>
-        <li><a class="icon" aria-label="Share post " href="#"><i class="fas fa-share-alt" aria-hidden="true" onmouseover="$('#i-share').toggle();" onmouseout="$('#i-share').toggle();" onclick="$('#share').toggle();return false;"></i></a></li>
+        <li><a class="icon" aria-label="Back to top" href="#" onclick="$('html, body').animate({ scrollTop: 0 }, 'fast');"><i class="fas fa-chevron-up" aria-hidden="true" onmouseover="$('#i-top').toggle();" onmouseout="$('#i-top').toggle();"></i></a></li>
+        <li><a class="icon" aria-label="Share post" href="#"><i class="fas fa-share-alt" aria-hidden="true" onmouseover="$('#i-share').toggle();" onmouseout="$('#i-share').toggle();" onclick="$('#share').toggle();return false;"></i></a></li>
       </ul>
       <span id="i-prev" class="info" style="display:none;">Previous post</span>
       <span id="i-next" class="info" style="display:none;">Next post</span>
@@ -144,12 +146,12 @@
   
 
   <div class="content" itemprop="articleBody">
-    <p>With the change in Docker licensing, Docker Desktop will require a license for large organizations.<br>As soon as I saw this change, I started looking for alternatives to run docker images on my Mac and in the end I decided to use <a href="https://minikube.sigs.k8s.io/" target="_blank" rel="noopener">minikube</a>.</p>
-<p>An important aspect to keep in mind is persistence when running containers with minikube. The minikube manages a virtual machine as kubernetes node and the docker containers you run will execute on this virtual machine. So, persistence layer for the containers are also on the virtual machine. </p>
+    <p>As you may have heard, with the change in Docker licensing Docker-Desktop will require a license for large organizations. As soon as I saw this change, I started looking for alternatives to run docker images on my Mac and after some research I decided to use <a href="https://minikube.sigs.k8s.io/" target="_blank" rel="noopener">minikube</a>.</p>
+<p>An important aspect to keep in mind is persistence when running containers with minikube. The minikube manages a virtual machine as kubernetes node and the docker containers you run will execute on this virtual machine. So, persistence layer for the containers are also on the virtual machine.</p>
 <p>I will give an example to be more clear. One of the containers I like to keep running is Sourcegraph. I like to index my personal code repositories and do a search on all of them. Sourcegraph is very smart with code indexing and helps me find certain tokens on distributed repositories.</p>
-<p>If you examine the <a href="https://docs.sourcegraph.com/admin/install/docker" target="_blank" rel="noopener">documentation from Sourcegraph to run it from a container</a>, it recommends the following command to run an instance:</p>
+<p>If you examine the <a href="https://docs.sourcegraph.com/admin/install/docker" target="_blank" rel="noopener">documentation from Sourcegraph</a>, it recommends the following command to run an instance as a container:</p>
 <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">docker run --publish 7080:7080 \</span><br><span class="line">--publish 127.0.0.1:3370:3370 \</span><br><span class="line">--rm \</span><br><span class="line">--volume ~/.sourcegraph/config:/etc/sourcegraph \</span><br><span class="line">--volume ~/.sourcegraph/data:/var/opt/sourcegraph \</span><br><span class="line">sourcegraph/server:3.33.0</span><br></pre></td></tr></table></figure>
-<p>As I mentioned, there is a problem if we execute this command with minikube because the docker container runs in the virtual machine (VM) when using minikube and only certain folders are persisted from the VM. For details, please see <a href="https://minikube.sigs.k8s.io/docs/handbook/persistent_volumes/" target="_blank" rel="noopener">Minikube-Persistent Volumes</a>.</p>
+<p>As I mentioned, there is a problem if we execute this command with minikube because the docker container runs in the virtual machine (VM) when using minikube and only certain folders are persisted from the VM. For details, please see <a href="https://minikube.sigs.k8s.io/docs/handbook/persistent_volumes/" target="_blank" rel="noopener">Minikube-Persistent Volumes</a>. Every time the container restarts, you will need to configure the server from scratch or <a href="https://docs.sourcegraph.com/admin/config/advanced_config_file" target="_blank" rel="noopener">sync the configuration manually</a>.</p>
 <p>So with a minor adjustment to the <code>docker run</code> command we can move the container volumes to one of the persisted volumes (i.e. <code>/data</code>) on the minikube node.</p>
 <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">docker run --publish 7080:7080 \</span><br><span class="line">--publish 127.0.0.1:3370:3370 \</span><br><span class="line">--restart=always \</span><br><span class="line">--mount <span class="built_in">type</span>=<span class="built_in">bind</span>,<span class="built_in">source</span>=/data/sourcegraph/config,destination=/etc/sourcegraph \</span><br><span class="line">--mount <span class="built_in">type</span>=<span class="built_in">bind</span>,<span class="built_in">source</span>=/data/sourcegraph/data,destination=/var/opt/sourcegraph \</span><br><span class="line">sourcegraph/server:3.33.0</span><br></pre></td></tr></table></figure>
 <p>After this configuration, Sourcegraph will start automatically after <code>minikube start</code> command (note <code>restart=always</code>) and it will persist the configuration and indexes (note the <code>--mount</code> arguments) unless the minikube node is deleted.</p>
@@ -227,15 +229,15 @@
   <div class="footer-right">
     <nav>
       <ul>
-         
-          <li><a href="/">Home</a></li>
-         
-          <li><a href="/about/">About</a></li>
-         
-          <li><a href="/archives/">Writing</a></li>
-         
-          <li><a href="https://github.com/ssasoglu">Projects</a></li>
-        
+        <!--
+       --><li><a href="/">Home</a></li><!--
+     --><!--
+       --><li><a href="/about/">About</a></li><!--
+     --><!--
+       --><li><a href="/archives/">Writing</a></li><!--
+     --><!--
+       --><li><a href="https://github.com/ssasoglu">Projects</a></li><!--
+     -->
       </ul>
     </nav>
   </div>
@@ -308,6 +310,7 @@
         }());
     </script>
 
+<!-- utterances Comments -->
 
 </body>
 </html>
