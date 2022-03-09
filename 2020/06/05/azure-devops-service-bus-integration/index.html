@@ -155,7 +155,7 @@
   
 
   <div class="content" itemprop="articleBody">
-    <p>The documentation about Azure DevOps and Azure Service Bus integration is a bit blurry, but when connecting a service bus as a service hook to Azure DevOps, copy the SAS (Shared Access Token) connection string from <a target="_blank" rel="noopener" href="https://portal.azure.com">Azure Portal</a> and paste it without the <code>EntityPath</code> and <code>;</code> to the connection string of Azure DevOps to make it work.</p>
+    <p>The documentation about Azure DevOps and Azure Service Bus integration is a bit blurry, but when connecting a service bus as a service hook to Azure DevOps, copy the SAS (Shared Access Token) connection string from <a target="_blank" rel="noopener" href="https://portal.azure.com/">Azure Portal</a> and paste it without the <code>EntityPath</code> and <code>;</code> to the connection string of Azure DevOps to make it work.</p>
 <p>This is the connection string on Azure Portal:</p>
 <p><code>Endpoint=sb://selcuk.servicebus.windows.net/;SharedAccessKeyName=ado;SharedAccessKey=FAKE=SAS=4FjStU5nBWH4F0PF/HXjgGQMA=;EntityPath=myQueue</code></p>
 <p>This what should be pasted on Azure DevOps:</p>
