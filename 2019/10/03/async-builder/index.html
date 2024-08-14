@@ -1,0 +1,396 @@
+<!DOCTYPE html>
+<html lang=en>
+<head>
+    <!-- so meta -->
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="HandheldFriendly" content="True">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=5" />
+    <meta name="description" content="In my previous blog post, I discussed an approach to solve a weak point of builder pattern. In this blog post, I want to continue with a related discussion. The challenge that will be discussed over t">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Async Builder Pattern">
+<meta property="og:url" content="https://selcuksasoglu.com/2019/10/03/async-builder/index.html">
+<meta property="og:site_name" content="Selcuk Sasoglu">
+<meta property="og:description" content="In my previous blog post, I discussed an approach to solve a weak point of builder pattern. In this blog post, I want to continue with a related discussion. The challenge that will be discussed over t">
+<meta property="og:locale" content="en_US">
+<meta property="article:published_time" content="2019-10-03T13:02:17.000Z">
+<meta property="article:modified_time" content="2024-04-02T10:44:52.171Z">
+<meta property="article:author" content="Selcuk Sasoglu">
+<meta property="article:tag" content="design patterns">
+<meta property="article:tag" content="builder pattern">
+<meta property="article:tag" content="async">
+<meta name="twitter:card" content="summary">
+    
+    
+      
+        
+          <link rel="shortcut icon" href="/images/favicon.ico">
+        
+      
+      
+        
+          <link rel="icon" type="image/png" href="/images/favicon-192x192.png" sizes="192x192">
+        
+      
+      
+        
+          <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon.png">
+        
+      
+    
+    <!-- title -->
+    <title>Async Builder Pattern</title>
+    <!-- async scripts -->
+    <!-- Google Analytics -->
+
+
+    <!-- Umami Analytics -->
+
+    <script async defer
+            data-website-id="413684e0-0618-4773-b9c3-309f4740f242"
+            src="https://cloud.umami.is/script.js">
+    </script>
+
+
+    <!-- styles -->
+    
+<link rel="stylesheet" href="/css/style.css">
+
+    <!-- persian styles -->
+    
+    <!-- rss -->
+    
+    
+	<!-- mathjax -->
+	
+<meta name="generator" content="Hexo 6.0.0"></head>
+
+<body class="max-width mx-auto px3 ltr">
+    
+      <div id="header-post">
+  <a id="menu-icon" href="#" aria-label="Menu"><i class="fa-solid fa-bars fa-lg"></i></a>
+  <a id="menu-icon-tablet" href="#" aria-label="Menu"><i class="fa-solid fa-bars fa-lg"></i></a>
+  <a id="top-icon-tablet" href="#" aria-label="Top" onclick="$('html, body').animate({ scrollTop: 0 }, 'fast');" style="display:none;"><i class="fa-solid fa-chevron-up fa-lg"></i></a>
+  <span id="menu">
+    <span id="nav">
+      <ul>
+        <!--
+       --><li><a href="/">Home</a></li><!--
+     --><!--
+       --><li><a href="/about/">About</a></li><!--
+     --><!--
+       --><li><a href="/archives/">Writing</a></li><!--
+     --><!--
+       --><li><a target="_blank" rel="noopener" href="https://github.com/ssasoglu">Projects</a></li><!--
+     -->
+      </ul>
+    </span>
+    <br/>
+    <span id="actions">
+      <ul>
+        
+        <li><a class="icon" aria-label="Previous post" href="/2020/05/19/til/"><i class="fa-solid fa-chevron-left" aria-hidden="true" onmouseover="$('#i-prev').toggle();" onmouseout="$('#i-prev').toggle();"></i></a></li>
+        
+        
+        <li><a class="icon" aria-label="Next post" href="/2018/12/18/builder-pattern-with-mandatory-calls/"><i class="fa-solid fa-chevron-right" aria-hidden="true" onmouseover="$('#i-next').toggle();" onmouseout="$('#i-next').toggle();"></i></a></li>
+        
+        <li><a class="icon" aria-label="Back to top" href="#" onclick="$('html, body').animate({ scrollTop: 0 }, 'fast');"><i class="fa-solid fa-chevron-up" aria-hidden="true" onmouseover="$('#i-top').toggle();" onmouseout="$('#i-top').toggle();"></i></a></li>
+        <li><a class="icon" aria-label="Share post" href="#"><i class="fa-solid fa-share-alt" aria-hidden="true" onmouseover="$('#i-share').toggle();" onmouseout="$('#i-share').toggle();" onclick="$('#share').toggle();return false;"></i></a></li>
+      </ul>
+      <span id="i-prev" class="info" style="display:none;">Previous post</span>
+      <span id="i-next" class="info" style="display:none;">Next post</span>
+      <span id="i-top" class="info" style="display:none;">Back to top</span>
+      <span id="i-share" class="info" style="display:none;">Share post</span>
+    </span>
+    <br/>
+    <div id="share" style="display: none">
+      <ul>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.facebook.com/sharer.php?u=https://selcuksasoglu.com/2019/10/03/async-builder/"><i class="fab fa-facebook " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://twitter.com/share?url=https://selcuksasoglu.com/2019/10/03/async-builder/&text=Async Builder Pattern"><i class="fab fa-twitter " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.linkedin.com/shareArticle?url=https://selcuksasoglu.com/2019/10/03/async-builder/&title=Async Builder Pattern"><i class="fab fa-linkedin " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://pinterest.com/pin/create/bookmarklet/?url=https://selcuksasoglu.com/2019/10/03/async-builder/&is_video=false&description=Async Builder Pattern"><i class="fab fa-pinterest " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="mailto:?subject=Async Builder Pattern&body=Check out this article: https://selcuksasoglu.com/2019/10/03/async-builder/"><i class="fa-solid fa-envelope " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://getpocket.com/save?url=https://selcuksasoglu.com/2019/10/03/async-builder/&title=Async Builder Pattern"><i class="fab fa-get-pocket " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://reddit.com/submit?url=https://selcuksasoglu.com/2019/10/03/async-builder/&title=Async Builder Pattern"><i class="fab fa-reddit " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.stumbleupon.com/submit?url=https://selcuksasoglu.com/2019/10/03/async-builder/&title=Async Builder Pattern"><i class="fab fa-stumbleupon " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://digg.com/submit?url=https://selcuksasoglu.com/2019/10/03/async-builder/&title=Async Builder Pattern"><i class="fab fa-digg " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.tumblr.com/share/link?url=https://selcuksasoglu.com/2019/10/03/async-builder/&name=Async Builder Pattern&description="><i class="fab fa-tumblr " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://news.ycombinator.com/submitlink?u=https://selcuksasoglu.com/2019/10/03/async-builder/&t=Async Builder Pattern"><i class="fab fa-hacker-news " aria-hidden="true"></i></a></li>
+</ul>
+
+    </div>
+    
+    
+      <div id="toc">
+        <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#Challenge"><span class="toc-number">1.</span> <span class="toc-text">Challenge</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Converting-the-Builder-to-Async"><span class="toc-number">2.</span> <span class="toc-text">Converting the Builder to Async</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Proposed-Solution-s"><span class="toc-number">3.</span> <span class="toc-text">Proposed Solution(s)</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#1-Builder-with-Parallel-Executing-Tasks"><span class="toc-number">3.1.</span> <span class="toc-text">1- Builder with Parallel Executing Tasks</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#Pros"><span class="toc-number">3.1.1.</span> <span class="toc-text">Pros</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#Cons"><span class="toc-number">3.1.2.</span> <span class="toc-text">Cons</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#2-Builder-with-ordered-Func-lt-Task-gt"><span class="toc-number">3.2.</span> <span class="toc-text">2- Builder with ordered Func&lt;Task&gt;</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#Pros-1"><span class="toc-number">3.2.1.</span> <span class="toc-text">Pros</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#Cons-1"><span class="toc-number">3.2.2.</span> <span class="toc-text">Cons</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#3-Builder-with-cancellable-Tasks"><span class="toc-number">3.3.</span> <span class="toc-text">3- Builder with cancellable Tasks</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#Pros-2"><span class="toc-number">3.3.1.</span> <span class="toc-text">Pros</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#Cons-2"><span class="toc-number">3.3.2.</span> <span class="toc-text">Cons</span></a></li></ol></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Conclusion"><span class="toc-number">4.</span> <span class="toc-text">Conclusion</span></a></li></ol>
+      </div>
+    
+  </span>
+</div>
+
+    
+    <div class="content index py4 ">
+        
+        <article class="post h-entry" itemscope itemtype="http://schema.org/BlogPosting">
+  <header>
+    
+    <h1 class="posttitle p-name" itemprop="name headline">
+        Async Builder Pattern
+    </h1>
+
+
+
+    <div class="meta">
+      <span class="author p-author h-card" itemprop="author" itemscope itemtype="http://schema.org/Person">
+        <span class="p-name" itemprop="name">Selcuk Sasoglu</span>
+      </span>
+      
+    <div class="postdate">
+      
+        <time datetime="2019-10-03T13:02:17.000Z" class="dt-published" itemprop="datePublished">2019-10-03</time>
+        
+      
+    </div>
+
+
+      
+
+      
+    <div class="article-tag">
+        <i class="fa-solid fa-tag"></i>
+        <a class="p-category" href="/tags/async/" rel="tag">async</a>, <a class="p-category" href="/tags/builder-pattern/" rel="tag">builder pattern</a>, <a class="p-category" href="/tags/design-patterns/" rel="tag">design patterns</a>
+    </div>
+
+
+    </div>
+  </header>
+  
+
+  <div class="content e-content" itemprop="articleBody">
+    <p>In my <a target="_blank" rel="noopener" href="https://www.selcuksasoglu.com/2018/12/18/builder-pattern-with-mandatory-calls/">previous blog post</a>, I discussed an approach to solve a weak point of <a target="_blank" rel="noopener" href="https://en.wikipedia.org/wiki/Builder_pattern">builder pattern</a>. In this blog post, I want to continue with a related discussion. The challenge that will be discussed over this blog post is “How can we make builder pattern async?” This is an issue we faced when we decided to migrate our current project to async to increase our throughput. We came to a decision moment, we would either delete the builder classes we had (there were many) or find a way to utilize them in async world.</p>
+<h2 id="Challenge"><a href="#Challenge" class="headerlink" title="Challenge"></a>Challenge</h2><p>Let’s go over the problem briefly. I will reuse the example from <a target="_blank" rel="noopener" href="https://www.selcuksasoglu.com/2018/12/18/builder-pattern-with-mandatory-calls/">the previous blog post</a> and try to create a <code>Contact</code> again. You can <a target="_blank" rel="noopener" href="https://repl.it/@selcuks/builder-pattern-example">see or try this code on repl.it</a></p>
+<figure class="highlight csharp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title">Contact</span></span><br><span class="line">&#123;</span><br><span class="line">  <span class="comment">// Mandatory properties</span></span><br><span class="line">  <span class="keyword">public</span> <span class="built_in">string</span> Name &#123; <span class="keyword">get</span>; <span class="keyword">set</span>; &#125;</span><br><span class="line">  <span class="keyword">public</span> <span class="built_in">string</span> Surname &#123; <span class="keyword">get</span>; <span class="keyword">set</span>; &#125;</span><br><span class="line">  <span class="keyword">public</span> <span class="built_in">string</span> PhoneNumber &#123; <span class="keyword">get</span>; <span class="keyword">set</span>; &#125;</span><br><span class="line">  <span class="comment">// Optional properties</span></span><br><span class="line">  <span class="keyword">public</span> <span class="built_in">string</span> Email &#123; <span class="keyword">get</span>; <span class="keyword">set</span>; &#125;</span><br><span class="line">  <span class="keyword">public</span> <span class="built_in">string</span> Address &#123; <span class="keyword">get</span>; <span class="keyword">set</span>; &#125;</span><br><span class="line">  <span class="keyword">public</span> <span class="built_in">string</span> Notes &#123; <span class="keyword">get</span>; <span class="keyword">set</span>; &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>In a typical builder pattern implementation you would have something like this:</p>
+<figure class="highlight csharp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="keyword">interface</span> <span class="title">IContactBuilder</span></span><br><span class="line">&#123;</span><br><span class="line">  <span class="function">IContactBuilder <span class="title">WithName</span>(<span class="params"><span class="built_in">string</span> name</span>)</span>;</span><br><span class="line">  <span class="function">IContactBuilder <span class="title">WithSurname</span>(<span class="params"><span class="built_in">string</span> surname</span>)</span>;</span><br><span class="line">  <span class="function">IContactBuilder <span class="title">WithPhone</span>(<span class="params"><span class="built_in">string</span> phoneNumber</span>)</span>;</span><br><span class="line">  <span class="function">IContactBuilder <span class="title">WithEmail</span>(<span class="params"><span class="built_in">string</span> email</span>)</span>;</span><br><span class="line">  <span class="function">IContactBuilder <span class="title">WithAddress</span>(<span class="params"><span class="built_in">string</span> address</span>)</span>;</span><br><span class="line">  <span class="function">IContactBuilder <span class="title">WithNotes</span>(<span class="params"><span class="built_in">string</span> notes</span>)</span>;</span><br><span class="line">  <span class="function">Contact <span class="title">Build</span>()</span>;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title">ContactBuilder</span> : <span class="title">IContactBuilder</span></span><br><span class="line">&#123;</span><br><span class="line">  <span class="keyword">private</span> <span class="keyword">readonly</span> Contact contact;</span><br><span class="line"></span><br><span class="line">  <span class="function"><span class="keyword">public</span> <span class="title">ContactBuilder</span>()</span></span><br><span class="line">  &#123;</span><br><span class="line">    contact = <span class="keyword">new</span> Contact();</span><br><span class="line">  &#125;</span><br><span class="line">  <span class="function"><span class="keyword">public</span> IContactBuilder <span class="title">WithName</span>(<span class="params"><span class="built_in">string</span> name</span>)</span></span><br><span class="line">  &#123;</span><br><span class="line">    contact.Name = name;</span><br><span class="line">    <span class="keyword">return</span> <span class="keyword">this</span>;</span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">  <span class="comment">// Rest is skipped for brevity.</span></span><br><span class="line"></span><br><span class="line">  <span class="function"><span class="keyword">public</span> Contact <span class="title">Build</span>()</span></span><br><span class="line">  &#123;</span><br><span class="line">    <span class="keyword">return</span> <span class="keyword">this</span>.contact;</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>Of course in an implementation like this, you would not need an async operation, so let’s spice it up a little bit.</p>
+<p>Imagine that you would like to construct your contacts in such a way that name and surname should be queried from Linkedin profile, phone and address from Google Contacts. Let’s inject 2 new dependencies to the builder class <code>ILinkedinRepository</code> and <code>IGoogleContactsRepository</code>. For brevity I will skip implementation of these classes, but let’s assume that they will both have an option to read data through username.</p>
+<figure class="highlight csharp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title">ContactBuilder</span> : <span class="title">IContactBuilder</span></span><br><span class="line">&#123;</span><br><span class="line">  <span class="keyword">private</span> <span class="keyword">readonly</span> Contact contact;</span><br><span class="line">  <span class="keyword">private</span> <span class="keyword">readonly</span> <span class="built_in">string</span> username;</span><br><span class="line"></span><br><span class="line">  <span class="function"><span class="keyword">public</span> <span class="title">ContactBuilder</span>(<span class="params"></span></span></span><br><span class="line"><span class="params"><span class="function">    ILinkedinRepository linkedinRepository,</span></span></span><br><span class="line"><span class="params"><span class="function">    IGoogleContactsRepository googleContactsRepository,</span></span></span><br><span class="line"><span class="params"><span class="function">    <span class="built_in">string</span> username</span>)</span></span><br><span class="line">  &#123;</span><br><span class="line">    <span class="keyword">this</span>.linkedinRepository = linkedinRepository;</span><br><span class="line">    <span class="keyword">this</span>.googleContactsRepository = googleContactsRepository;</span><br><span class="line">    <span class="keyword">this</span>.contact = <span class="keyword">new</span> Contact();</span><br><span class="line">    <span class="keyword">this</span>.username = username;</span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">  <span class="function"><span class="keyword">public</span> IContactBuilder <span class="title">WithName</span>()</span></span><br><span class="line">  &#123;</span><br><span class="line">    <span class="comment">// Network operation that blocks the running thread:</span></span><br><span class="line">    <span class="keyword">var</span> name = <span class="keyword">this</span>.linkedinRepository.GetName(username);</span><br><span class="line">    contact.Name = name;</span><br><span class="line">    <span class="keyword">return</span> <span class="keyword">this</span>;</span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">  <span class="comment">// Rest is skipped for brevity.</span></span><br><span class="line"></span><br><span class="line">  <span class="function"><span class="keyword">public</span> Contact <span class="title">Build</span>()</span></span><br><span class="line">  &#123;</span><br><span class="line">    <span class="keyword">return</span> <span class="keyword">this</span>.contact;</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>Please note that the concrete implementation always does a network operation and returns <code>this</code>.</p>
+<h2 id="Converting-the-Builder-to-Async"><a href="#Converting-the-Builder-to-Async" class="headerlink" title="Converting the Builder to Async"></a>Converting the Builder to Async</h2><p>In async implementation of the same class returning <code>this</code> is not a possible option because we will need to return either a <code>Task</code> for void functions or <code>Task&lt;T&gt;</code> when we want to return a value. Even if we return <code>Task&lt;IContactBuilder&gt;</code> we will break the simplicity of builder pattern. Why? Because our builder and consumer would look like this:</p>
+<p>Our concrete builder:</p>
+<figure class="highlight csharp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title">ContactBuilder</span> : <span class="title">IContactBuilder</span></span><br><span class="line">&#123;</span><br><span class="line">  <span class="keyword">private</span> <span class="keyword">readonly</span> ILinkedinRepository linkedinRepository;</span><br><span class="line">  <span class="keyword">private</span> <span class="keyword">readonly</span> IGoogleContactsRepository googleContactsRepository;</span><br><span class="line">  <span class="keyword">private</span> <span class="keyword">readonly</span> Contact contact;</span><br><span class="line">  <span class="keyword">private</span> <span class="keyword">readonly</span> <span class="built_in">string</span> username;</span><br><span class="line"></span><br><span class="line">  <span class="function"><span class="keyword">public</span> <span class="title">ContactBuilder</span>(<span class="params"></span></span></span><br><span class="line"><span class="params"><span class="function">    ILinkedinRepository linkedinRepository,</span></span></span><br><span class="line"><span class="params"><span class="function">    IGoogleContactsRepository googleContactsRepository,</span></span></span><br><span class="line"><span class="params"><span class="function">    <span class="built_in">string</span> username</span>)</span></span><br><span class="line">  &#123;</span><br><span class="line">    <span class="keyword">this</span>.linkedinRepository = linkedinRepository;</span><br><span class="line">    <span class="keyword">this</span>.googleContactsRepository = googleContactsRepository;</span><br><span class="line">    <span class="keyword">this</span>.contact = <span class="keyword">new</span> Contact();</span><br><span class="line">    <span class="keyword">this</span>.username = username;</span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">  <span class="function"><span class="keyword">public</span> <span class="keyword">async</span> Task&lt;IContactBuilder&gt; <span class="title">WithName</span>()</span></span><br><span class="line">  &#123;</span><br><span class="line">    <span class="comment">// Network operation that blocks the running thread:</span></span><br><span class="line">    <span class="keyword">var</span> name = <span class="keyword">this</span>.linkedinRepository.GetName(username);</span><br><span class="line">    contact.Name = fullName;</span><br><span class="line">    <span class="keyword">return</span> <span class="keyword">this</span>;</span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">  <span class="comment">// Rest is skipped for brevity.</span></span><br><span class="line"></span><br><span class="line">  <span class="function"><span class="keyword">public</span> <span class="keyword">async</span> Task&lt;Contact&gt; <span class="title">Build</span>()</span></span><br><span class="line">  &#123;</span><br><span class="line">    <span class="keyword">return</span> <span class="keyword">this</span>.contact;</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>Our consumer class:</p>
+<figure class="highlight csharp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">  <span class="keyword">public</span> <span class="keyword">class</span> <span class="title">BuilderConsumerClass</span></span><br><span class="line">&#123;</span><br><span class="line">  <span class="function"><span class="keyword">public</span> <span class="title">BuilderConsumerClass</span>(<span class="params">IContactBuilder builder</span>)</span></span><br><span class="line">  &#123;</span><br><span class="line">    <span class="comment">// Declarations here...</span></span><br><span class="line"></span><br><span class="line">    <span class="keyword">var</span> withNameBuilder = <span class="keyword">await</span> builder.WithName();</span><br><span class="line">    <span class="keyword">var</span> contact = <span class="keyword">await</span> withNameBuilder.Build();</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>You can see where I am trying to go with this. While trying to make the builder pattern async, we are actually sacrificing the advantages of using it.</p>
+<h2 id="Proposed-Solution-s"><a href="#Proposed-Solution-s" class="headerlink" title="Proposed Solution(s)"></a>Proposed Solution(s)</h2><p>During my initial research for a solution, <a target="_blank" rel="noopener" href="https://stackoverflow.com/questions/25302178/using-async-tasks-with-the-builder-pattern">this StackOverflow question</a> was the only thing that I could find. I started digging up with this starting point to see my options. In the next section you can see the viable options I could come up with.</p>
+<h3 id="1-Builder-with-Parallel-Executing-Tasks"><a href="#1-Builder-with-Parallel-Executing-Tasks" class="headerlink" title="1- Builder with Parallel Executing Tasks"></a>1- Builder with Parallel Executing Tasks</h3><p>In the most simple solution, we can use a <code>Queue</code> to start and keep track of new threads per methods within the builder class. Each method action will be a new <code>Task</code> and we can still return <code>this</code> from builder methods. With this approach running thread will never be blocked and only <code>Build()</code> method will be async.</p>
+<p><a target="_blank" rel="noopener" href="https://repl.it/@selcuks/builder-parallel-running-actions">Try here.</a></p>
+<figure class="highlight csharp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title">ContactBuilder</span> : <span class="title">IContactBuilder</span></span><br><span class="line">&#123;</span><br><span class="line">  <span class="keyword">private</span> <span class="keyword">readonly</span> ILinkedinRepository linkedinRepository;</span><br><span class="line">  <span class="keyword">private</span> <span class="keyword">readonly</span> IGoogleContactsRepository googleContactsRepository;</span><br><span class="line">  <span class="keyword">private</span> <span class="keyword">readonly</span> Contact contact;</span><br><span class="line">  <span class="keyword">private</span> <span class="keyword">readonly</span> <span class="built_in">string</span> username;</span><br><span class="line">  <span class="keyword">private</span> Queue&lt;Task&gt; builderQueue;</span><br><span class="line"></span><br><span class="line">  <span class="function"><span class="keyword">public</span> <span class="title">ContactBuilder</span>(<span class="params"></span></span></span><br><span class="line"><span class="params"><span class="function">    ILinkedinRepository linkedinRepository,</span></span></span><br><span class="line"><span class="params"><span class="function">    IGoogleContactsRepository googleContactsRepository,</span></span></span><br><span class="line"><span class="params"><span class="function">    <span class="built_in">string</span> username</span>)</span></span><br><span class="line">  &#123;</span><br><span class="line">    <span class="keyword">this</span>.linkedinRepository = linkedinRepository;</span><br><span class="line">    <span class="keyword">this</span>.googleContactsRepository = googleContactsRepository;</span><br><span class="line">    <span class="keyword">this</span>.contact = <span class="keyword">new</span> Contact();</span><br><span class="line">    <span class="keyword">this</span>.username = username;</span><br><span class="line">    <span class="keyword">this</span>.builderQueue = <span class="keyword">new</span> Queue&lt;Task&gt;();</span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">  <span class="function"><span class="keyword">public</span> IContactBuilder <span class="title">WithName</span>()</span></span><br><span class="line">  &#123;</span><br><span class="line">    builderQueue.Enqueue(Task.Run(() =&gt; </span><br><span class="line">    &#123;</span><br><span class="line">      <span class="keyword">var</span> name = <span class="keyword">this</span>.linkedinRepository.GetName(<span class="keyword">this</span>.username);</span><br><span class="line">      contact.Name = name;</span><br><span class="line">    &#125;));</span><br><span class="line"></span><br><span class="line">    <span class="keyword">return</span> <span class="keyword">this</span>;</span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">  <span class="comment">// Other methods are skipped for brevity</span></span><br><span class="line"></span><br><span class="line">  <span class="function"><span class="keyword">public</span> <span class="keyword">async</span> Task&lt;Contact&gt; <span class="title">Build</span>()</span></span><br><span class="line">  &#123;</span><br><span class="line">    Task currentTask = <span class="literal">null</span>;</span><br><span class="line">    Console.WriteLine(<span class="string">&quot;&gt;&gt;&gt; Building contact...&quot;</span>);</span><br><span class="line"></span><br><span class="line">    <span class="keyword">while</span> (builderQueue.TryDequeue(<span class="keyword">out</span> currentTask))</span><br><span class="line">    &#123;</span><br><span class="line">      <span class="keyword">await</span> currentTask.ConfigureAwait(<span class="literal">false</span>);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    Console.WriteLine(<span class="string">&quot;&gt;&gt;&gt; Done...&quot;</span>);</span><br><span class="line">    <span class="keyword">return</span> <span class="keyword">this</span>.contact;</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>Please note that with every builder method a new <code>Task</code> is being created to handle the operation and running thread just continues execution. Each created <code>Task</code> is running immediately. In the build method, we are awaiting the created tasks.</p>
+<h4 id="Pros"><a href="#Pros" class="headerlink" title="Pros"></a>Pros</h4><ul>
+<li>All tasks run in parallel</li>
+<li>Main thread is not blocked</li>
+<li>Faster</li>
+</ul>
+<h4 id="Cons"><a href="#Cons" class="headerlink" title="Cons"></a>Cons</h4><ul>
+<li>Execution order of tasks cannot be known before hand</li>
+<li>If one task fails, other scheduled tasks will still continue to work</li>
+</ul>
+<h3 id="2-Builder-with-ordered-Func-lt-Task-gt"><a href="#2-Builder-with-ordered-Func-lt-Task-gt" class="headerlink" title="2- Builder with ordered Func&lt;Task&gt;"></a>2- Builder with ordered <code>Func&lt;Task&gt;</code></h3><p>Another variation of this solution can also be necessary. Sometimes when you are building an object, you need to make sure that fields are being assigned in order. Then this variation can be used to do it.</p>
+<p><a target="_blank" rel="noopener" href="https://repl.it/@selcuks/builder-ordered-func-of-task">Try here.</a></p>
+<figure class="highlight csharp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title">ContactBuilder</span> : <span class="title">IContactBuilder</span></span><br><span class="line">&#123;</span><br><span class="line">  <span class="keyword">private</span> <span class="keyword">readonly</span> ILinkedinRepository linkedinRepository;</span><br><span class="line">  <span class="keyword">private</span> <span class="keyword">readonly</span> IGoogleContactsRepository googleContactsRepository;</span><br><span class="line">  <span class="keyword">private</span> <span class="keyword">readonly</span> Contact contact;</span><br><span class="line">  <span class="keyword">private</span> <span class="keyword">readonly</span> <span class="built_in">string</span> username;</span><br><span class="line">  <span class="keyword">private</span> Queue&lt;Func&lt;Task&gt;&gt; builderQueue;</span><br><span class="line"></span><br><span class="line">  <span class="function"><span class="keyword">public</span> <span class="title">ContactBuilder</span>(<span class="params"></span></span></span><br><span class="line"><span class="params"><span class="function">    ILinkedinRepository linkedinRepository,</span></span></span><br><span class="line"><span class="params"><span class="function">    IGoogleContactsRepository googleContactsRepository,</span></span></span><br><span class="line"><span class="params"><span class="function">    <span class="built_in">string</span> username</span>)</span></span><br><span class="line">  &#123;</span><br><span class="line">    <span class="keyword">this</span>.linkedinRepository = linkedinRepository;</span><br><span class="line">    <span class="keyword">this</span>.googleContactsRepository = googleContactsRepository;</span><br><span class="line">    <span class="keyword">this</span>.contact = <span class="keyword">new</span> Contact();</span><br><span class="line">    <span class="keyword">this</span>.username = username;</span><br><span class="line">    <span class="keyword">this</span>.builderQueue = <span class="keyword">new</span> Queue&lt;Func&lt;Task&gt;&gt;();</span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">  <span class="function"><span class="keyword">public</span> IContactBuilder <span class="title">WithName</span>()</span></span><br><span class="line">  &#123;</span><br><span class="line">    builderQueue.Enqueue(() =&gt; Task.Run(() =&gt; </span><br><span class="line">    &#123;</span><br><span class="line">      <span class="keyword">var</span> name = <span class="keyword">this</span>.linkedinRepository.GetName(<span class="keyword">this</span>.username);</span><br><span class="line">      contact.Name = name;</span><br><span class="line">    &#125;));</span><br><span class="line"></span><br><span class="line">    <span class="keyword">return</span> <span class="keyword">this</span>;</span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">  <span class="comment">// Other methods are skipped for brevity</span></span><br><span class="line"></span><br><span class="line">  <span class="function"><span class="keyword">public</span> <span class="keyword">async</span> Task&lt;Contact&gt; <span class="title">Build</span>()</span></span><br><span class="line">  &#123;</span><br><span class="line">    Func&lt;Task&gt; startTaskExecution = <span class="literal">null</span>;</span><br><span class="line">    Console.WriteLine(<span class="string">&quot;&gt;&gt;&gt; Building contact...&quot;</span>);</span><br><span class="line">    <span class="keyword">while</span> (builderQueue.TryDequeue(<span class="keyword">out</span> startTaskExecution))</span><br><span class="line">    &#123;</span><br><span class="line">      <span class="keyword">var</span> currentTask = startTaskExecution.Invoke();</span><br><span class="line">      <span class="keyword">await</span> currentTask.ConfigureAwait(<span class="literal">false</span>);</span><br><span class="line">    &#125;</span><br><span class="line">    Console.WriteLine(<span class="string">&quot;&gt;&gt;&gt; Done...&quot;</span>);</span><br><span class="line">    <span class="keyword">return</span> <span class="keyword">this</span>.contact;</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>Please note that the builder queue is now of type <code>Func&lt;Task&gt;</code>. So when a new task is being created, it is not immediately running. We still need to invoke this <code>Func</code> to start operation. With this approach, we make sure that builder methods are run in the order they were created.</p>
+<h4 id="Pros-1"><a href="#Pros-1" class="headerlink" title="Pros"></a>Pros</h4><ul>
+<li>Order of execution is under control</li>
+<li>Main thread is not blocked</li>
+<li>If one task fails, remaining tasks won’t execute.</li>
+</ul>
+<h4 id="Cons-1"><a href="#Cons-1" class="headerlink" title="Cons"></a>Cons</h4><ul>
+<li>Slower. Tasks run in a waterfall fashion.</li>
+</ul>
+<h3 id="3-Builder-with-cancellable-Tasks"><a href="#3-Builder-with-cancellable-Tasks" class="headerlink" title="3- Builder with cancellable Tasks"></a>3- Builder with cancellable Tasks</h3><p><a target="_blank" rel="noopener" href="https://repl.it/@selcuks/builder-with-cancellable-tasks">Try here.</a></p>
+<figure class="highlight csharp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title">ContactBuilder</span> : <span class="title">IContactBuilder</span></span><br><span class="line">&#123;</span><br><span class="line">  <span class="keyword">private</span> <span class="keyword">readonly</span> ILinkedinRepository linkedinRepository;</span><br><span class="line">  <span class="keyword">private</span> <span class="keyword">readonly</span> IGoogleContactsRepository googleContactsRepository;</span><br><span class="line">  <span class="keyword">private</span> <span class="keyword">readonly</span> Contact contact;</span><br><span class="line">  <span class="keyword">private</span> <span class="keyword">readonly</span> <span class="built_in">string</span> username;</span><br><span class="line">  <span class="keyword">private</span> CancellationToken cancellationToken;</span><br><span class="line">  <span class="keyword">private</span> CancellationTokenSource cancellationTokenSource;</span><br><span class="line">  <span class="keyword">private</span> Queue&lt;Task&gt; builderQueue;</span><br><span class="line"></span><br><span class="line">  <span class="function"><span class="keyword">public</span> <span class="title">ContactBuilder</span>(<span class="params"></span></span></span><br><span class="line"><span class="params"><span class="function">    ILinkedinRepository linkedinRepository,</span></span></span><br><span class="line"><span class="params"><span class="function">    IGoogleContactsRepository googleContactsRepository,</span></span></span><br><span class="line"><span class="params"><span class="function">    <span class="built_in">string</span> username</span>)</span></span><br><span class="line">  &#123;</span><br><span class="line">    <span class="keyword">this</span>.linkedinRepository = linkedinRepository;</span><br><span class="line">    <span class="keyword">this</span>.googleContactsRepository = googleContactsRepository;</span><br><span class="line">    <span class="keyword">this</span>.contact = <span class="keyword">new</span> Contact();</span><br><span class="line">    <span class="keyword">this</span>.username = username;</span><br><span class="line">    <span class="keyword">this</span>.cancellationTokenSource = <span class="keyword">new</span> CancellationTokenSource();</span><br><span class="line">    <span class="keyword">this</span>.cancellationToken = cancellationTokenSource.Token;</span><br><span class="line">    <span class="keyword">this</span>.builderQueue = <span class="keyword">new</span> Queue&lt;Task&gt;();</span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">  <span class="function"><span class="keyword">public</span> IContactBuilder <span class="title">WithName</span>()</span></span><br><span class="line">  &#123;</span><br><span class="line">    builderQueue.Enqueue(Task.Run(() =&gt;</span><br><span class="line">    &#123;</span><br><span class="line">      <span class="keyword">var</span> name = <span class="keyword">this</span>.linkedinRepository.GetName(<span class="keyword">this</span>.username);</span><br><span class="line"></span><br><span class="line">      <span class="keyword">if</span> (cancellationToken.IsCancellationRequested)</span><br><span class="line">      &#123;</span><br><span class="line">        cancellationToken.ThrowIfCancellationRequested();</span><br><span class="line">      &#125;</span><br><span class="line"></span><br><span class="line">      contact.Name = name;</span><br><span class="line">    &#125;));</span><br><span class="line"></span><br><span class="line">    <span class="keyword">return</span> <span class="keyword">this</span>;</span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">  <span class="comment">// Other methods are skipped for brevity</span></span><br><span class="line"></span><br><span class="line">  <span class="function"><span class="keyword">public</span> <span class="keyword">async</span> Task&lt;Contact&gt; <span class="title">Build</span>()</span></span><br><span class="line">  &#123;</span><br><span class="line">    Task currentTask = <span class="literal">null</span>;</span><br><span class="line">    Console.WriteLine(<span class="string">&quot;&gt;&gt;&gt; Building contact...&quot;</span>);</span><br><span class="line"></span><br><span class="line">    <span class="keyword">while</span> (builderQueue.TryDequeue(<span class="keyword">out</span> currentTask))</span><br><span class="line">    &#123;</span><br><span class="line">      <span class="keyword">await</span> currentTask.ConfigureAwait(<span class="literal">false</span>);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    Console.WriteLine(<span class="string">&quot;&gt;&gt;&gt; Done...&quot;</span>);</span><br><span class="line">    <span class="keyword">return</span> <span class="keyword">this</span>.contact;</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>Please note the builder queue is here again of type <code>Task</code>. For each method in the builder class a new <code>Task</code> is created and it is immediately running. But we also added cancellation checks on the <code>CancellationToken</code> so if any of the operations has a failure, we can stop all other tasks.</p>
+<h4 id="Pros-2"><a href="#Pros-2" class="headerlink" title="Pros"></a>Pros</h4><ul>
+<li>Best of the both worlds from previous examples</li>
+<li>Main thread is not blocked</li>
+<li>Fast, threads run in parallel</li>
+<li>Threads can be cancelled. If one thread gets an exception, other threads can be stopped through cancellation</li>
+</ul>
+<h4 id="Cons-2"><a href="#Cons-2" class="headerlink" title="Cons"></a>Cons</h4><ul>
+<li>More complex. You have to think carefully for cancellation checks and insert where necessary</li>
+<li>Execution order of tasks cannot be known before hand</li>
+</ul>
+<h2 id="Conclusion"><a href="#Conclusion" class="headerlink" title="Conclusion"></a>Conclusion</h2><p>As discussed in the previous sections, keeping builder pattern in an async codebase is difficult. If you are a developer (like me) who thinks builder pattern has a lot of advantages and would like to keep it in your async codebase, then you can adapt one of the solutions discussed here. In all of the solutions, exception handling needs careful decisions because you will be handling a lot of threads and correct decisions need to be made in case one of these threads throws an exception.</p>
+<p>Don’t forget that you can also combine one of these solutions with Chain Builders which was mentioned in <a target="_blank" rel="noopener" href="https://www.selcuksasoglu.com/2018/12/18/builder-pattern-with-mandatory-calls/">my previous blog post.</a></p>
+<p>Please let me know what you think in the comments below. I hope you find this post helpful. Example code related to this topic is available in <a target="_blank" rel="noopener" href="https://github.com/ssasoglu/blog-code-examples">blog-code-examples</a> or in the repl.it links that I have provided in previous sections.</p>
+<p>Happy coding!</p>
+
+  </div>
+</article>
+
+    <div class="blog-post-comments">
+        <div id="disqus_thread">
+            <noscript>Please enable JavaScript to view the comments.</noscript>
+        </div>
+    </div>
+
+
+
+        
+          <div id="footer-post-container">
+  <div id="footer-post">
+
+    <div id="nav-footer" style="display: none">
+      <ul>
+        
+          <li><a href="/">Home</a></li>
+        
+          <li><a href="/about/">About</a></li>
+        
+          <li><a href="/archives/">Writing</a></li>
+        
+          <li><a target="_blank" rel="noopener" href="https://github.com/ssasoglu">Projects</a></li>
+        
+      </ul>
+    </div>
+
+    
+    
+      <div id="toc-footer" style="display: none">
+        <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#Challenge"><span class="toc-number">1.</span> <span class="toc-text">Challenge</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Converting-the-Builder-to-Async"><span class="toc-number">2.</span> <span class="toc-text">Converting the Builder to Async</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Proposed-Solution-s"><span class="toc-number">3.</span> <span class="toc-text">Proposed Solution(s)</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#1-Builder-with-Parallel-Executing-Tasks"><span class="toc-number">3.1.</span> <span class="toc-text">1- Builder with Parallel Executing Tasks</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#Pros"><span class="toc-number">3.1.1.</span> <span class="toc-text">Pros</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#Cons"><span class="toc-number">3.1.2.</span> <span class="toc-text">Cons</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#2-Builder-with-ordered-Func-lt-Task-gt"><span class="toc-number">3.2.</span> <span class="toc-text">2- Builder with ordered Func&lt;Task&gt;</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#Pros-1"><span class="toc-number">3.2.1.</span> <span class="toc-text">Pros</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#Cons-1"><span class="toc-number">3.2.2.</span> <span class="toc-text">Cons</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#3-Builder-with-cancellable-Tasks"><span class="toc-number">3.3.</span> <span class="toc-text">3- Builder with cancellable Tasks</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#Pros-2"><span class="toc-number">3.3.1.</span> <span class="toc-text">Pros</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#Cons-2"><span class="toc-number">3.3.2.</span> <span class="toc-text">Cons</span></a></li></ol></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Conclusion"><span class="toc-number">4.</span> <span class="toc-text">Conclusion</span></a></li></ol>
+      </div>
+    
+
+    <div id="share-footer" style="display: none">
+      <ul>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.facebook.com/sharer.php?u=https://selcuksasoglu.com/2019/10/03/async-builder/"><i class="fab fa-facebook fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://twitter.com/share?url=https://selcuksasoglu.com/2019/10/03/async-builder/&text=Async Builder Pattern"><i class="fab fa-twitter fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.linkedin.com/shareArticle?url=https://selcuksasoglu.com/2019/10/03/async-builder/&title=Async Builder Pattern"><i class="fab fa-linkedin fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://pinterest.com/pin/create/bookmarklet/?url=https://selcuksasoglu.com/2019/10/03/async-builder/&is_video=false&description=Async Builder Pattern"><i class="fab fa-pinterest fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="mailto:?subject=Async Builder Pattern&body=Check out this article: https://selcuksasoglu.com/2019/10/03/async-builder/"><i class="fa-solid fa-envelope fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://getpocket.com/save?url=https://selcuksasoglu.com/2019/10/03/async-builder/&title=Async Builder Pattern"><i class="fab fa-get-pocket fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://reddit.com/submit?url=https://selcuksasoglu.com/2019/10/03/async-builder/&title=Async Builder Pattern"><i class="fab fa-reddit fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.stumbleupon.com/submit?url=https://selcuksasoglu.com/2019/10/03/async-builder/&title=Async Builder Pattern"><i class="fab fa-stumbleupon fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://digg.com/submit?url=https://selcuksasoglu.com/2019/10/03/async-builder/&title=Async Builder Pattern"><i class="fab fa-digg fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.tumblr.com/share/link?url=https://selcuksasoglu.com/2019/10/03/async-builder/&name=Async Builder Pattern&description="><i class="fab fa-tumblr fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://news.ycombinator.com/submitlink?u=https://selcuksasoglu.com/2019/10/03/async-builder/&t=Async Builder Pattern"><i class="fab fa-hacker-news fa-lg" aria-hidden="true"></i></a></li>
+</ul>
+
+    </div>
+
+    <div id="actions-footer">
+        <a id="menu" class="icon" href="#" onclick="$('#nav-footer').toggle();return false;"><i class="fa-solid fa-bars fa-lg" aria-hidden="true"></i> Menu</a>
+        
+          <a id="toc" class="icon" href="#" onclick="$('#toc-footer').toggle();return false;"><i class="fa-solid fa-list fa-lg" aria-hidden="true"></i> TOC</a>
+        
+        <a id="share" class="icon" href="#" onclick="$('#share-footer').toggle();return false;"><i class="fa-solid fa-share-alt fa-lg" aria-hidden="true"></i> Share</a>
+        <a id="top" style="display:none" class="icon" href="#" onclick="$('html, body').animate({ scrollTop: 0 }, 'fast');"><i class="fa-solid fa-chevron-up fa-lg" aria-hidden="true"></i> Top</a>
+    </div>
+
+  </div>
+</div>
+
+        
+        <footer id="footer">
+  <div class="footer-left">
+    Copyright &copy;
+    
+    
+    2014-2024
+    Selcuk Sasoglu
+  </div>
+  <div class="footer-right">
+    <nav>
+      <ul>
+        <!--
+       --><li><a href="/">Home</a></li><!--
+     --><!--
+       --><li><a href="/about/">About</a></li><!--
+     --><!--
+       --><li><a href="/archives/">Writing</a></li><!--
+     --><!--
+       --><li><a target="_blank" rel="noopener" href="https://github.com/ssasoglu">Projects</a></li><!--
+     -->
+      </ul>
+    </nav>
+  </div>
+</footer>
+
+    </div>
+    <!-- styles -->
+
+
+
+  <link rel="preload" as="style" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" crossorigin="anonymous" onload="this.onload=null;this.rel='stylesheet'"/>
+
+
+    <!-- jquery -->
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js" crossorigin="anonymous"></script>
+
+
+
+
+<!-- clipboard -->
+
+  
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/clipboard.js/2.0.7/clipboard.min.js" crossorigin="anonymous"></script>
+  
+  <script type="text/javascript">
+  $(function() {
+    // copy-btn HTML
+    var btn = "<span class=\"btn-copy tooltipped tooltipped-sw\" aria-label=\"Copy to clipboard!\">";
+    btn += '<i class="fa-regular fa-clone"></i>';
+    btn += '</span>';
+    // mount it!
+    $(".highlight table").before(btn);
+    var clip = new ClipboardJS('.btn-copy', {
+      text: function(trigger) {
+        return Array.from(trigger.nextElementSibling.querySelectorAll('.code')).reduce((str,it)=>str+it.innerText+'\n','')
+      }
+    });
+    clip.on('success', function(e) {
+      e.trigger.setAttribute('aria-label', "Copied!");
+      e.clearSelection();
+    })
+  })
+  </script>
+
+
+<script src="/js/main.js"></script>
+
+<!-- search -->
+
+<!-- Baidu Analytics -->
+
+<!-- Cloudflare Analytics -->
+
+  <script defer src='https://static.cloudflareinsights.com/beacon.min.js' data-cf-beacon='{"token": "9112ad25ff1c47ba8fa90bea13ceeff2"}'></script>
+
+<!-- Disqus Comments -->
+
+    <script type="text/javascript">
+        var disqus_shortname = 'selcuksasoglu';
+
+        (function(){
+            var dsq = document.createElement('script');
+            dsq.type = 'text/javascript';
+            dsq.async = true;
+            dsq.src = '//' + disqus_shortname + '.disqus.com/embed.js';
+            (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+        }());
+    </script>
+
+<!-- utterances Comments -->
+
+</body>
+</html>

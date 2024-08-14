@@ -1,0 +1,379 @@
+<!DOCTYPE html>
+<html lang=en>
+<head>
+    <!-- so meta -->
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="HandheldFriendly" content="True">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=5" />
+    <meta name="description" content="I admit it is difficult as a software engineer to keep-up with the technology development in our era. Everyday you can read about many new software being published, doing amazing things. And people ar">
+<meta property="og:type" content="article">
+<meta property="og:title" content="From Wordpress to Static Site Generator">
+<meta property="og:url" content="https://selcuksasoglu.com/2016/01/18/from-wordpress-to-static-site-generator/index.html">
+<meta property="og:site_name" content="Selcuk Sasoglu">
+<meta property="og:description" content="I admit it is difficult as a software engineer to keep-up with the technology development in our era. Everyday you can read about many new software being published, doing amazing things. And people ar">
+<meta property="og:locale" content="en_US">
+<meta property="article:published_time" content="2016-01-18T22:02:11.000Z">
+<meta property="article:modified_time" content="2024-04-02T10:44:52.172Z">
+<meta property="article:author" content="Selcuk Sasoglu">
+<meta property="article:tag" content="github">
+<meta property="article:tag" content="hexo">
+<meta property="article:tag" content="node.js">
+<meta property="article:tag" content="blog">
+<meta property="article:tag" content="wordpress">
+<meta property="article:tag" content="static site generator">
+<meta name="twitter:card" content="summary">
+    
+    
+      
+        
+          <link rel="shortcut icon" href="/images/favicon.ico">
+        
+      
+      
+        
+          <link rel="icon" type="image/png" href="/images/favicon-192x192.png" sizes="192x192">
+        
+      
+      
+        
+          <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon.png">
+        
+      
+    
+    <!-- title -->
+    <title>From Wordpress to Static Site Generator</title>
+    <!-- async scripts -->
+    <!-- Google Analytics -->
+
+
+    <!-- Umami Analytics -->
+
+    <script async defer
+            data-website-id="413684e0-0618-4773-b9c3-309f4740f242"
+            src="https://cloud.umami.is/script.js">
+    </script>
+
+
+    <!-- styles -->
+    
+<link rel="stylesheet" href="/css/style.css">
+
+    <!-- persian styles -->
+    
+    <!-- rss -->
+    
+    
+	<!-- mathjax -->
+	
+<meta name="generator" content="Hexo 6.0.0"></head>
+
+<body class="max-width mx-auto px3 ltr">
+    
+      <div id="header-post">
+  <a id="menu-icon" href="#" aria-label="Menu"><i class="fa-solid fa-bars fa-lg"></i></a>
+  <a id="menu-icon-tablet" href="#" aria-label="Menu"><i class="fa-solid fa-bars fa-lg"></i></a>
+  <a id="top-icon-tablet" href="#" aria-label="Top" onclick="$('html, body').animate({ scrollTop: 0 }, 'fast');" style="display:none;"><i class="fa-solid fa-chevron-up fa-lg"></i></a>
+  <span id="menu">
+    <span id="nav">
+      <ul>
+        <!--
+       --><li><a href="/">Home</a></li><!--
+     --><!--
+       --><li><a href="/about/">About</a></li><!--
+     --><!--
+       --><li><a href="/archives/">Writing</a></li><!--
+     --><!--
+       --><li><a target="_blank" rel="noopener" href="https://github.com/ssasoglu">Projects</a></li><!--
+     -->
+      </ul>
+    </span>
+    <br/>
+    <span id="actions">
+      <ul>
+        
+        <li><a class="icon" aria-label="Previous post" href="/2017/06/20/basic-git-aliases/"><i class="fa-solid fa-chevron-left" aria-hidden="true" onmouseover="$('#i-prev').toggle();" onmouseout="$('#i-prev').toggle();"></i></a></li>
+        
+        
+        <li><a class="icon" aria-label="Next post" href="/2015/08/24/changing-default-security-protocol-from-ssl-3-0-to-tls-1-0-in-wcf/"><i class="fa-solid fa-chevron-right" aria-hidden="true" onmouseover="$('#i-next').toggle();" onmouseout="$('#i-next').toggle();"></i></a></li>
+        
+        <li><a class="icon" aria-label="Back to top" href="#" onclick="$('html, body').animate({ scrollTop: 0 }, 'fast');"><i class="fa-solid fa-chevron-up" aria-hidden="true" onmouseover="$('#i-top').toggle();" onmouseout="$('#i-top').toggle();"></i></a></li>
+        <li><a class="icon" aria-label="Share post" href="#"><i class="fa-solid fa-share-alt" aria-hidden="true" onmouseover="$('#i-share').toggle();" onmouseout="$('#i-share').toggle();" onclick="$('#share').toggle();return false;"></i></a></li>
+      </ul>
+      <span id="i-prev" class="info" style="display:none;">Previous post</span>
+      <span id="i-next" class="info" style="display:none;">Next post</span>
+      <span id="i-top" class="info" style="display:none;">Back to top</span>
+      <span id="i-share" class="info" style="display:none;">Share post</span>
+    </span>
+    <br/>
+    <div id="share" style="display: none">
+      <ul>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.facebook.com/sharer.php?u=https://selcuksasoglu.com/2016/01/18/from-wordpress-to-static-site-generator/"><i class="fab fa-facebook " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://twitter.com/share?url=https://selcuksasoglu.com/2016/01/18/from-wordpress-to-static-site-generator/&text=From Wordpress to Static Site Generator"><i class="fab fa-twitter " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.linkedin.com/shareArticle?url=https://selcuksasoglu.com/2016/01/18/from-wordpress-to-static-site-generator/&title=From Wordpress to Static Site Generator"><i class="fab fa-linkedin " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://pinterest.com/pin/create/bookmarklet/?url=https://selcuksasoglu.com/2016/01/18/from-wordpress-to-static-site-generator/&is_video=false&description=From Wordpress to Static Site Generator"><i class="fab fa-pinterest " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="mailto:?subject=From Wordpress to Static Site Generator&body=Check out this article: https://selcuksasoglu.com/2016/01/18/from-wordpress-to-static-site-generator/"><i class="fa-solid fa-envelope " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://getpocket.com/save?url=https://selcuksasoglu.com/2016/01/18/from-wordpress-to-static-site-generator/&title=From Wordpress to Static Site Generator"><i class="fab fa-get-pocket " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://reddit.com/submit?url=https://selcuksasoglu.com/2016/01/18/from-wordpress-to-static-site-generator/&title=From Wordpress to Static Site Generator"><i class="fab fa-reddit " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.stumbleupon.com/submit?url=https://selcuksasoglu.com/2016/01/18/from-wordpress-to-static-site-generator/&title=From Wordpress to Static Site Generator"><i class="fab fa-stumbleupon " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://digg.com/submit?url=https://selcuksasoglu.com/2016/01/18/from-wordpress-to-static-site-generator/&title=From Wordpress to Static Site Generator"><i class="fab fa-digg " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.tumblr.com/share/link?url=https://selcuksasoglu.com/2016/01/18/from-wordpress-to-static-site-generator/&name=From Wordpress to Static Site Generator&description="><i class="fab fa-tumblr " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://news.ycombinator.com/submitlink?u=https://selcuksasoglu.com/2016/01/18/from-wordpress-to-static-site-generator/&t=From Wordpress to Static Site Generator"><i class="fab fa-hacker-news " aria-hidden="true"></i></a></li>
+</ul>
+
+    </div>
+    
+    
+      <div id="toc">
+        <ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#Why"><span class="toc-number">1.</span> <span class="toc-text">Why</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#How"><span class="toc-number">2.</span> <span class="toc-text">How</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#Selection"><span class="toc-number">2.1.</span> <span class="toc-text">Selection</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Migration"><span class="toc-number">2.2.</span> <span class="toc-text">Migration</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Deployment"><span class="toc-number">2.3.</span> <span class="toc-text">Deployment</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#Summary"><span class="toc-number">3.</span> <span class="toc-text">Summary</span></a></li></ol>
+      </div>
+    
+  </span>
+</div>
+
+    
+    <div class="content index py4 ">
+        
+        <article class="post h-entry" itemscope itemtype="http://schema.org/BlogPosting">
+  <header>
+    
+    <h1 class="posttitle p-name" itemprop="name headline">
+        From Wordpress to Static Site Generator
+    </h1>
+
+
+
+    <div class="meta">
+      <span class="author p-author h-card" itemprop="author" itemscope itemtype="http://schema.org/Person">
+        <span class="p-name" itemprop="name">Selcuk Sasoglu</span>
+      </span>
+      
+    <div class="postdate">
+      
+        <time datetime="2016-01-18T22:02:11.000Z" class="dt-published" itemprop="datePublished">2016-01-18</time>
+        
+      
+    </div>
+
+
+      
+
+      
+    <div class="article-tag">
+        <i class="fa-solid fa-tag"></i>
+        <a class="p-category" href="/tags/blog/" rel="tag">blog</a>, <a class="p-category" href="/tags/github/" rel="tag">github</a>, <a class="p-category" href="/tags/hexo/" rel="tag">hexo</a>, <a class="p-category" href="/tags/node-js/" rel="tag">node.js</a>, <a class="p-category" href="/tags/static-site-generator/" rel="tag">static site generator</a>, <a class="p-category" href="/tags/wordpress/" rel="tag">wordpress</a>
+    </div>
+
+
+    </div>
+  </header>
+  
+
+  <div class="content e-content" itemprop="articleBody">
+    <p>I admit it is difficult as a software engineer to keep-up with the technology development in our era. Everyday you can read about many new software being published, doing amazing things. And people are helping each other without expecting anything back which is awesome. After sharing my thoughts on open source projects, I would like to tell you the story of how I switched my entire blog from wordpress to an open source static site generator.</p>
+<h1 id="Why"><a href="#Why" class="headerlink" title="Why"></a>Why</h1><p>First off all, I hated wordpress. I was always looking for a way to switch my blog site to a better technology because wordpress:</p>
+<ul>
+<li>was cumbersome,</li>
+<li>required a server (or a VPS),</li>
+<li>required a database (MySQL),</li>
+<li>required a lot of maintenance (VPS operating system updates, wordpress updates … etc.),</li>
+<li>was difficult to use with many plug-ins that you need to purchase for easier usage,</li>
+<li>back-up operation was difficult,</li>
+<li>themes had a lot of variarity but they were expensive.</li>
+</ul>
+<p>Then I saw a great video tutorial by Jeff Ammons on Pluralsight: <a target="_blank" rel="noopener" href="https://www.pluralsight.com/courses/static-site-generator-build-better-blog">Build a better blog with a static site generator.</a> When I watched a few minutes of this lesson, I decided this is the new library that I have been waiting for to switch my blog. I cannot go through all the details, tips and tricks in this video, but I would like to give a heads-up and note the basics. I suggest you watch the video if you are planning a migration like I did.</p>
+<h1 id="How"><a href="#How" class="headerlink" title="How"></a>How</h1><p>Ok, let’s start. Here are the basic steps you need to go through:<br>1- Select your static site generator library,<br>2- Choose a theme for your blog site,<br>3- (Optional) Find a way to migrate your previous blog posts to markdown file,<br>4- Deploy your new blog site,<br>5- (Optional) Create a CNAME for your personal domain,<br>6- Enjoy! (Not optional)</p>
+<p>To start with, there are many static site generator libraries and you need to get your hands on them to select your static site generator according to your taste. This web site is an awesome source of information for this task: <a target="_blank" rel="noopener" href="http://www.staticgen.com/">StaticGen</a>. There are many possibilities and you can choose according to your previous experience with any language. I chose <a target="_blank" rel="noopener" href="https://hexo.io/">Hexo</a>, because I like Javascript and hexo is easy to use. It does not require me to set every detail of the library.</p>
+<p>Then I started to look for a new theme and I am amazed with the available <a target="_blank" rel="noopener" href="https://hexo.io/themes/">theme options</a>. I narrowed down my selections to this list beginning from I like the most:</p>
+<ul>
+<li><a target="_blank" rel="noopener" href="https://github.com/probberechts/cactus-dark">Cactus-Dark</a><ul>
+<li>🌵 A responsive, dark and simple theme for Hexo.</li>
+</ul>
+</li>
+<li><a target="_blank" rel="noopener" href="https://github.com/LouisBarranqueiro/hexo-theme-tranquilpeak">Tranquilpeak</a><ul>
+<li>A gorgeous responsive theme for Hexo. - <a target="_blank" rel="noopener" href="http://louisbarranqueiro.github.io/hexo-theme-tranquilpeak/">Demo</a></li>
+</ul>
+</li>
+<li><a target="_blank" rel="noopener" href="https://github.com/hexojs/hexo-theme-phase">Phase</a><br>* The most beautiful theme for Hexo. - <a target="_blank" rel="noopener" href="https://hexo.io/hexo-theme-phase/">Demo</a></li>
+<li><a target="_blank" rel="noopener" href="https://github.com/SuperKieran/TKL">TKL</a><br>* A responsive design theme for Hexo. - <a target="_blank" rel="noopener" href="http://go.kieran.top/post/14/">Demo</a></li>
+<li><a target="_blank" rel="noopener" href="https://github.com/ken8203/hexo-theme-alberta">Alberta</a><ul>
+<li>A simple, textured and responsive theme with your own photo. - <a target="_blank" rel="noopener" href="http://jaychung.tw/">Demo</a></li>
+</ul>
+</li>
+<li><a target="_blank" rel="noopener" href="https://github.com/heruoxin/hexo-persona-color">Persona Color</a><br>* A responsive theme with 4 color schemes. - <a target="_blank" rel="noopener" href="http://1ittlecup.com/">Demo</a></li>
+<li><a target="_blank" rel="noopener" href="https://github.com/akar1nchan/hexo-theme-snow">Snow</a><br>* A white theme for Hexo based on Landscape. <a target="_blank" rel="noopener" href="http://akarin.xyz/">Demo</a></li>
+</ul>
+<h2 id="Selection"><a href="#Selection" class="headerlink" title="Selection"></a>Selection</h2><p><a target="_blank" rel="noopener" href="https://github.com/LouisBarranqueiro/hexo-theme-tranquilpeak">Tranquilpeak 1.4</a> seemed like a new version of <a target="_blank" rel="noopener" href="https://github.com/ken8203/hexo-theme-alberta">Alberta</a> with a lot more capabilities and integrated services. Also it’s documentation was really good and its developer <a target="_blank" rel="noopener" href="https://github.com/LouisBarranqueiro">Louis Barranqueiro</a> is really helpful. He answered all my questions in an instant with detailed explanations.</p>
+<p>I used <a target="_blank" rel="noopener" href="https://github.com/LouisBarranqueiro/hexo-theme-tranquilpeak">Tranquilpeak</a> for 2 years and as I got more experienced with static site generators, I moved to <a target="_blank" rel="noopener" href="https://github.com/probberechts/cactus-dark">Cactus-Dark</a>. I liked the minimalist approach with this theme.</p>
+<h2 id="Migration"><a href="#Migration" class="headerlink" title="Migration"></a>Migration</h2><p>There are also plug-ins for Hexo to export your previous blog posts from wordpress to a markdown file. (Markdown file is the source file for your posts in Hexo, see details from <a target="_blank" rel="noopener" href="https://hexo.io/">Hexo web site</a>.) So I easily exported my previous posts to my new blog as well. I had to change a few details on every exported post, though it wasn’t a hard work.</p>
+<h2 id="Deployment"><a href="#Deployment" class="headerlink" title="Deployment"></a>Deployment</h2><p>Last step is deployment and it couldn’t be any easier. <a target="_blank" rel="noopener" href="https://github.com/">Github</a> provides a free and easy solution for your personal blog as long as it is static content. You can see the details from <a target="_blank" rel="noopener" href="https://pages.github.com/">here</a>. So I created a new public repository with my github name and voila. After the first commit, my new blog site was operational just like that. I also created a CNAME file to direct my personal domain name to this repository as well. See <a target="_blank" rel="noopener" href="https://help.github.com/articles/setting-up-a-custom-domain-with-github-pages/">here.</a></p>
+<h1 id="Summary"><a href="#Summary" class="headerlink" title="Summary"></a>Summary</h1><p>My whole experience summary is as follows:</p>
+<ul>
+<li>Migration process was easy and fun,</li>
+<li>I got to learn a bit of Node.js,</li>
+<li>I do not need to maintain a VPS now, (which my wordpress site used to work on)</li>
+<li>I do not need to pay for a VPS now,</li>
+<li>My blog site is a lot more faster,</li>
+<li>Writing a new post in Hexo is easy.</li>
+</ul>
+
+  </div>
+</article>
+
+    <div class="blog-post-comments">
+        <div id="disqus_thread">
+            <noscript>Please enable JavaScript to view the comments.</noscript>
+        </div>
+    </div>
+
+
+
+        
+          <div id="footer-post-container">
+  <div id="footer-post">
+
+    <div id="nav-footer" style="display: none">
+      <ul>
+        
+          <li><a href="/">Home</a></li>
+        
+          <li><a href="/about/">About</a></li>
+        
+          <li><a href="/archives/">Writing</a></li>
+        
+          <li><a target="_blank" rel="noopener" href="https://github.com/ssasoglu">Projects</a></li>
+        
+      </ul>
+    </div>
+
+    
+    
+      <div id="toc-footer" style="display: none">
+        <ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#Why"><span class="toc-number">1.</span> <span class="toc-text">Why</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#How"><span class="toc-number">2.</span> <span class="toc-text">How</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#Selection"><span class="toc-number">2.1.</span> <span class="toc-text">Selection</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Migration"><span class="toc-number">2.2.</span> <span class="toc-text">Migration</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Deployment"><span class="toc-number">2.3.</span> <span class="toc-text">Deployment</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#Summary"><span class="toc-number">3.</span> <span class="toc-text">Summary</span></a></li></ol>
+      </div>
+    
+
+    <div id="share-footer" style="display: none">
+      <ul>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.facebook.com/sharer.php?u=https://selcuksasoglu.com/2016/01/18/from-wordpress-to-static-site-generator/"><i class="fab fa-facebook fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://twitter.com/share?url=https://selcuksasoglu.com/2016/01/18/from-wordpress-to-static-site-generator/&text=From Wordpress to Static Site Generator"><i class="fab fa-twitter fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.linkedin.com/shareArticle?url=https://selcuksasoglu.com/2016/01/18/from-wordpress-to-static-site-generator/&title=From Wordpress to Static Site Generator"><i class="fab fa-linkedin fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://pinterest.com/pin/create/bookmarklet/?url=https://selcuksasoglu.com/2016/01/18/from-wordpress-to-static-site-generator/&is_video=false&description=From Wordpress to Static Site Generator"><i class="fab fa-pinterest fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="mailto:?subject=From Wordpress to Static Site Generator&body=Check out this article: https://selcuksasoglu.com/2016/01/18/from-wordpress-to-static-site-generator/"><i class="fa-solid fa-envelope fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://getpocket.com/save?url=https://selcuksasoglu.com/2016/01/18/from-wordpress-to-static-site-generator/&title=From Wordpress to Static Site Generator"><i class="fab fa-get-pocket fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://reddit.com/submit?url=https://selcuksasoglu.com/2016/01/18/from-wordpress-to-static-site-generator/&title=From Wordpress to Static Site Generator"><i class="fab fa-reddit fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.stumbleupon.com/submit?url=https://selcuksasoglu.com/2016/01/18/from-wordpress-to-static-site-generator/&title=From Wordpress to Static Site Generator"><i class="fab fa-stumbleupon fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://digg.com/submit?url=https://selcuksasoglu.com/2016/01/18/from-wordpress-to-static-site-generator/&title=From Wordpress to Static Site Generator"><i class="fab fa-digg fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.tumblr.com/share/link?url=https://selcuksasoglu.com/2016/01/18/from-wordpress-to-static-site-generator/&name=From Wordpress to Static Site Generator&description="><i class="fab fa-tumblr fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://news.ycombinator.com/submitlink?u=https://selcuksasoglu.com/2016/01/18/from-wordpress-to-static-site-generator/&t=From Wordpress to Static Site Generator"><i class="fab fa-hacker-news fa-lg" aria-hidden="true"></i></a></li>
+</ul>
+
+    </div>
+
+    <div id="actions-footer">
+        <a id="menu" class="icon" href="#" onclick="$('#nav-footer').toggle();return false;"><i class="fa-solid fa-bars fa-lg" aria-hidden="true"></i> Menu</a>
+        
+          <a id="toc" class="icon" href="#" onclick="$('#toc-footer').toggle();return false;"><i class="fa-solid fa-list fa-lg" aria-hidden="true"></i> TOC</a>
+        
+        <a id="share" class="icon" href="#" onclick="$('#share-footer').toggle();return false;"><i class="fa-solid fa-share-alt fa-lg" aria-hidden="true"></i> Share</a>
+        <a id="top" style="display:none" class="icon" href="#" onclick="$('html, body').animate({ scrollTop: 0 }, 'fast');"><i class="fa-solid fa-chevron-up fa-lg" aria-hidden="true"></i> Top</a>
+    </div>
+
+  </div>
+</div>
+
+        
+        <footer id="footer">
+  <div class="footer-left">
+    Copyright &copy;
+    
+    
+    2014-2024
+    Selcuk Sasoglu
+  </div>
+  <div class="footer-right">
+    <nav>
+      <ul>
+        <!--
+       --><li><a href="/">Home</a></li><!--
+     --><!--
+       --><li><a href="/about/">About</a></li><!--
+     --><!--
+       --><li><a href="/archives/">Writing</a></li><!--
+     --><!--
+       --><li><a target="_blank" rel="noopener" href="https://github.com/ssasoglu">Projects</a></li><!--
+     -->
+      </ul>
+    </nav>
+  </div>
+</footer>
+
+    </div>
+    <!-- styles -->
+
+
+
+  <link rel="preload" as="style" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" crossorigin="anonymous" onload="this.onload=null;this.rel='stylesheet'"/>
+
+
+    <!-- jquery -->
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js" crossorigin="anonymous"></script>
+
+
+
+
+<!-- clipboard -->
+
+  
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/clipboard.js/2.0.7/clipboard.min.js" crossorigin="anonymous"></script>
+  
+  <script type="text/javascript">
+  $(function() {
+    // copy-btn HTML
+    var btn = "<span class=\"btn-copy tooltipped tooltipped-sw\" aria-label=\"Copy to clipboard!\">";
+    btn += '<i class="fa-regular fa-clone"></i>';
+    btn += '</span>';
+    // mount it!
+    $(".highlight table").before(btn);
+    var clip = new ClipboardJS('.btn-copy', {
+      text: function(trigger) {
+        return Array.from(trigger.nextElementSibling.querySelectorAll('.code')).reduce((str,it)=>str+it.innerText+'\n','')
+      }
+    });
+    clip.on('success', function(e) {
+      e.trigger.setAttribute('aria-label', "Copied!");
+      e.clearSelection();
+    })
+  })
+  </script>
+
+
+<script src="/js/main.js"></script>
+
+<!-- search -->
+
+<!-- Baidu Analytics -->
+
+<!-- Cloudflare Analytics -->
+
+  <script defer src='https://static.cloudflareinsights.com/beacon.min.js' data-cf-beacon='{"token": "9112ad25ff1c47ba8fa90bea13ceeff2"}'></script>
+
+<!-- Disqus Comments -->
+
+    <script type="text/javascript">
+        var disqus_shortname = 'selcuksasoglu';
+
+        (function(){
+            var dsq = document.createElement('script');
+            dsq.type = 'text/javascript';
+            dsq.async = true;
+            dsq.src = '//' + disqus_shortname + '.disqus.com/embed.js';
+            (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+        }());
+    </script>
+
+<!-- utterances Comments -->
+
+</body>
+</html>

@@ -1,0 +1,378 @@
+<!DOCTYPE html>
+<html lang=en>
+<head>
+    <!-- so meta -->
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="HandheldFriendly" content="True">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=5" />
+    <meta name="description" content="PostNL is following the ambition to become the leading postal tech company and our serverless journey on AWS continues in full speed. In this blog post, I would like to give you some information about">
+<meta property="og:type" content="article">
+<meta property="og:title" content="IoT Thing Availability at Scale in PostNL">
+<meta property="og:url" content="https://selcuksasoglu.com/2023/05/15/iot-thing-availability-at-scale-in-PostNL/index.html">
+<meta property="og:site_name" content="Selcuk Sasoglu">
+<meta property="og:description" content="PostNL is following the ambition to become the leading postal tech company and our serverless journey on AWS continues in full speed. In this blog post, I would like to give you some information about">
+<meta property="og:locale" content="en_US">
+<meta property="og:image" content="https://selcuksasoglu.com/images/posts/2023/blog-post-availability-1.png">
+<meta property="og:image" content="https://selcuksasoglu.com/images/posts/2023/blog-post-availability-2.png">
+<meta property="og:image" content="https://selcuksasoglu.com/images/posts/2023/blog-post-availability-3.png">
+<meta property="article:published_time" content="2023-05-15T09:45:29.000Z">
+<meta property="article:modified_time" content="2024-04-02T10:44:52.172Z">
+<meta property="article:author" content="Selcuk Sasoglu">
+<meta property="article:tag" content="aws">
+<meta property="article:tag" content="iot">
+<meta property="article:tag" content="availability">
+<meta property="article:tag" content="heartbeat">
+<meta property="article:tag" content="event-driven-architecture">
+<meta property="article:tag" content="serverless">
+<meta property="article:tag" content="evolutionary-architecture">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://selcuksasoglu.com/images/posts/2023/blog-post-availability-1.png">
+    
+    
+      
+        
+          <link rel="shortcut icon" href="/images/favicon.ico">
+        
+      
+      
+        
+          <link rel="icon" type="image/png" href="/images/favicon-192x192.png" sizes="192x192">
+        
+      
+      
+        
+          <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon.png">
+        
+      
+    
+    <!-- title -->
+    <title>IoT Thing Availability at Scale in PostNL</title>
+    <!-- async scripts -->
+    <!-- Google Analytics -->
+
+
+    <!-- Umami Analytics -->
+
+    <script async defer
+            data-website-id="413684e0-0618-4773-b9c3-309f4740f242"
+            src="https://cloud.umami.is/script.js">
+    </script>
+
+
+    <!-- styles -->
+    
+<link rel="stylesheet" href="/css/style.css">
+
+    <!-- persian styles -->
+    
+    <!-- rss -->
+    
+    
+	<!-- mathjax -->
+	
+<meta name="generator" content="Hexo 6.0.0"></head>
+
+<body class="max-width mx-auto px3 ltr">
+    
+      <div id="header-post">
+  <a id="menu-icon" href="#" aria-label="Menu"><i class="fa-solid fa-bars fa-lg"></i></a>
+  <a id="menu-icon-tablet" href="#" aria-label="Menu"><i class="fa-solid fa-bars fa-lg"></i></a>
+  <a id="top-icon-tablet" href="#" aria-label="Top" onclick="$('html, body').animate({ scrollTop: 0 }, 'fast');" style="display:none;"><i class="fa-solid fa-chevron-up fa-lg"></i></a>
+  <span id="menu">
+    <span id="nav">
+      <ul>
+        <!--
+       --><li><a href="/">Home</a></li><!--
+     --><!--
+       --><li><a href="/about/">About</a></li><!--
+     --><!--
+       --><li><a href="/archives/">Writing</a></li><!--
+     --><!--
+       --><li><a target="_blank" rel="noopener" href="https://github.com/ssasoglu">Projects</a></li><!--
+     -->
+      </ul>
+    </span>
+    <br/>
+    <span id="actions">
+      <ul>
+        
+        
+        <li><a class="icon" aria-label="Next post" href="/2022/03/09/autofixture-greedy/"><i class="fa-solid fa-chevron-right" aria-hidden="true" onmouseover="$('#i-next').toggle();" onmouseout="$('#i-next').toggle();"></i></a></li>
+        
+        <li><a class="icon" aria-label="Back to top" href="#" onclick="$('html, body').animate({ scrollTop: 0 }, 'fast');"><i class="fa-solid fa-chevron-up" aria-hidden="true" onmouseover="$('#i-top').toggle();" onmouseout="$('#i-top').toggle();"></i></a></li>
+        <li><a class="icon" aria-label="Share post" href="#"><i class="fa-solid fa-share-alt" aria-hidden="true" onmouseover="$('#i-share').toggle();" onmouseout="$('#i-share').toggle();" onclick="$('#share').toggle();return false;"></i></a></li>
+      </ul>
+      <span id="i-prev" class="info" style="display:none;">Previous post</span>
+      <span id="i-next" class="info" style="display:none;">Next post</span>
+      <span id="i-top" class="info" style="display:none;">Back to top</span>
+      <span id="i-share" class="info" style="display:none;">Share post</span>
+    </span>
+    <br/>
+    <div id="share" style="display: none">
+      <ul>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.facebook.com/sharer.php?u=https://selcuksasoglu.com/2023/05/15/iot-thing-availability-at-scale-in-PostNL/"><i class="fab fa-facebook " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://twitter.com/share?url=https://selcuksasoglu.com/2023/05/15/iot-thing-availability-at-scale-in-PostNL/&text=IoT Thing Availability at Scale in PostNL"><i class="fab fa-twitter " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.linkedin.com/shareArticle?url=https://selcuksasoglu.com/2023/05/15/iot-thing-availability-at-scale-in-PostNL/&title=IoT Thing Availability at Scale in PostNL"><i class="fab fa-linkedin " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://pinterest.com/pin/create/bookmarklet/?url=https://selcuksasoglu.com/2023/05/15/iot-thing-availability-at-scale-in-PostNL/&is_video=false&description=IoT Thing Availability at Scale in PostNL"><i class="fab fa-pinterest " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="mailto:?subject=IoT Thing Availability at Scale in PostNL&body=Check out this article: https://selcuksasoglu.com/2023/05/15/iot-thing-availability-at-scale-in-PostNL/"><i class="fa-solid fa-envelope " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://getpocket.com/save?url=https://selcuksasoglu.com/2023/05/15/iot-thing-availability-at-scale-in-PostNL/&title=IoT Thing Availability at Scale in PostNL"><i class="fab fa-get-pocket " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://reddit.com/submit?url=https://selcuksasoglu.com/2023/05/15/iot-thing-availability-at-scale-in-PostNL/&title=IoT Thing Availability at Scale in PostNL"><i class="fab fa-reddit " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.stumbleupon.com/submit?url=https://selcuksasoglu.com/2023/05/15/iot-thing-availability-at-scale-in-PostNL/&title=IoT Thing Availability at Scale in PostNL"><i class="fab fa-stumbleupon " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://digg.com/submit?url=https://selcuksasoglu.com/2023/05/15/iot-thing-availability-at-scale-in-PostNL/&title=IoT Thing Availability at Scale in PostNL"><i class="fab fa-digg " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.tumblr.com/share/link?url=https://selcuksasoglu.com/2023/05/15/iot-thing-availability-at-scale-in-PostNL/&name=IoT Thing Availability at Scale in PostNL&description="><i class="fab fa-tumblr " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://news.ycombinator.com/submitlink?u=https://selcuksasoglu.com/2023/05/15/iot-thing-availability-at-scale-in-PostNL/&t=IoT Thing Availability at Scale in PostNL"><i class="fab fa-hacker-news " aria-hidden="true"></i></a></li>
+</ul>
+
+    </div>
+    
+    
+      <div id="toc">
+        <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#The-Problem"><span class="toc-number">1.</span> <span class="toc-text">The Problem</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Initial-Solution"><span class="toc-number">2.</span> <span class="toc-text">Initial Solution</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#Pros"><span class="toc-number">2.1.</span> <span class="toc-text">Pros</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Cons"><span class="toc-number">2.2.</span> <span class="toc-text">Cons</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Evolution-of-the-Initial-Solution"><span class="toc-number">3.</span> <span class="toc-text">Evolution of the Initial Solution</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Conclusions"><span class="toc-number">4.</span> <span class="toc-text">Conclusions</span></a></li></ol>
+      </div>
+    
+  </span>
+</div>
+
+    
+    <div class="content index py4 ">
+        
+        <article class="post h-entry" itemscope itemtype="http://schema.org/BlogPosting">
+  <header>
+    
+    <h1 class="posttitle p-name" itemprop="name headline">
+        IoT Thing Availability at Scale in PostNL
+    </h1>
+
+
+
+    <div class="meta">
+      <span class="author p-author h-card" itemprop="author" itemscope itemtype="http://schema.org/Person">
+        <span class="p-name" itemprop="name">Selcuk Sasoglu</span>
+      </span>
+      
+    <div class="postdate">
+      
+        <time datetime="2023-05-15T09:45:29.000Z" class="dt-published" itemprop="datePublished">2023-05-15</time>
+        
+      
+    </div>
+
+
+      
+
+      
+    <div class="article-tag">
+        <i class="fa-solid fa-tag"></i>
+        <a class="p-category" href="/tags/availability/" rel="tag">availability</a>, <a class="p-category" href="/tags/aws/" rel="tag">aws</a>, <a class="p-category" href="/tags/event-driven-architecture/" rel="tag">event-driven-architecture</a>, <a class="p-category" href="/tags/evolutionary-architecture/" rel="tag">evolutionary-architecture</a>, <a class="p-category" href="/tags/heartbeat/" rel="tag">heartbeat</a>, <a class="p-category" href="/tags/iot/" rel="tag">iot</a>, <a class="p-category" href="/tags/serverless/" rel="tag">serverless</a>
+    </div>
+
+
+    </div>
+  </header>
+  
+
+  <div class="content e-content" itemprop="articleBody">
+    <p>PostNL is following the ambition to become the leading postal tech company and our serverless journey on AWS continues in full speed. In this blog post, I would like to give you some information about the IoT-Platform of PostNL and how we evolve our internal services to create the optimum solutions for the problem at hand.</p>
+<p>As PostNL, we remain dedicated to be your favorite deliverer in the Benelux area which requires a significant technology infrastructure. Our colleagues in the field are working hard to deliver your packages to your doorstep as soon as possible. The engineering community in PostNL works together with our colleagues on the field and see how we can enable them to achieve our ambition.</p>
+<p>The IoT-Platform of PostNL is in a key position to enable data driven decisions because “IoT-Platform connects the physical world to the digital world!” and relay the events that are happening on the field objectively and reliably to the business. Our platform handles more than one billion events per day, ingesting all the traffic from tracked PostNL assets and processing them in record speed to enable close to real-time business events. Using the data streaming from the IoT-Platform, other teams in PostNL can make decisions based on actual data, optimize asset utilization, and create many more use cases.</p>
+<h2 id="The-Problem"><a href="#The-Problem" class="headerlink" title="The Problem"></a>The Problem</h2><p>One of the important events in IoT domain is the availability of the edge devices. A common term for this detection is a heartbeat. In the asset tracking solution of the IoT-Platform, a device corresponds to a beacon which has some sensors in it. The beacon can advertise the sensor telemetry through gateways and the data ends up in the IoT-Platform for further processing.</p>
+<p>In our case, any message received from a beacon can be considered as a heartbeat. Through heartbeat of the beacons IoT-Platform can evaluate whether a beacon is active or not. When beacons are not active or when they are not sending data to the IoT-Platform for a long time, we might decide to take an action. For example we can create an alert to check the battery of the beacon or log the last known GPS point of the asset so that we can find it in the logistic network and bring it under maintenance. There are more intricate use cases that rely on beacon availability, but let’s skip those for now to keep things simple.</p>
+<p><img src="/images/posts/2023/blog-post-availability-1.png" alt="Beacon Availability Diagram"></p>
+<p>Now that we have established the need for heartbeat messages, let’s explore possible solutions. The first question to consider in these situations is: “Does AWS offer a built-in service?” And the good news is, yes! AWS has a built in service for this purpose, AWS IoT Events, which supports device heartbeat. This solution works great out of the box, unless you need to scale it to a high number of assets. The IoT-Platform tracks more than 300.000 assets throughout the Benelux area. If you check the pricing of AWS IoT Events, it is obvious that the costs would go through the roof for our scale.</p>
+<h2 id="Initial-Solution"><a href="#Initial-Solution" class="headerlink" title="Initial Solution"></a>Initial Solution</h2><p>Availability events (device heartbeat) was one of the first cases where we needed a kind of state machine, that is aware of previous detection(s) from an asset which can also act on current detection. (When I mention state machines, AWS Step Functions could be evaluated as one of the first solutions on AWS. Unfortunately, with our scale AWS Step Functions have some limitations, but that’s a topic for another blog post. ☺️) Here are the simplified requirements:</p>
+<ul>
+<li>When a beacon connects to the IoT-Platform for the first time, we should generate an AVAILABLE event.</li>
+<li>As long as we keep receiving detections from the same beacon, we should not send any other event.</li>
+<li>When we do not receive any detections from the same beacon for a certain amount of time, we should generate an UNAVAILABLE event and mark that beacon is not accessible.</li>
+<li>Repeat for each beacon.</li>
+</ul>
+<p>If you consider the requirements above closely, it looks like a mechanism which is used in every large software system: a cache with time-to-live. We just need to generate events when writing to the cache and evicting from the cache.</p>
+<p>So the next question was to find a solution that can scale good enough until similar patterns emerge (where we would need more state machines) and the costs of it should be acceptable. After considering multiple options, we ended up with this basic setup:</p>
+<p><img src="/images/posts/2023/blog-post-availability-2.png" alt="Initial Solution"></p>
+<p>On the left side, you see the aggregated data stream where we have the beacon detections. In the “Availability Service”, a Lambda that listens to the detections coming from the beacons. The Lambda writes data to a Fargate container which has an in-memory cache implementation. The container generates events when writing records to the in-memory cache (AKA: Available Event) and evicting records from the cache (AKA: Unavailable Event). As you can see from the output of the “Availability Service” the generated events are sent out to the EventBridge for further processing.</p>
+<h3 id="Pros"><a href="#Pros" class="headerlink" title="Pros"></a>Pros</h3><ul>
+<li>Simple enough.</li>
+<li>Costs less than 10$ per month to run.</li>
+<li>Scales well vertically. We have a lot of room to grow until a replacement will be necessary.</li>
+</ul>
+<h3 id="Cons"><a href="#Cons" class="headerlink" title="Cons"></a>Cons</h3><ul>
+<li>More code to support in-memory cache! Every line of code is a liability and requires maintenance.</li>
+<li>We need to think about the persistence of in-memory cache especially during start-up, tear-down of the container to prevent data loss.</li>
+<li>Cannot scale horizontally to multiple containers.</li>
+</ul>
+<h2 id="Evolution-of-the-Initial-Solution"><a href="#Evolution-of-the-Initial-Solution" class="headerlink" title="Evolution of the Initial Solution"></a>Evolution of the Initial Solution</h2><p>As I mentioned in the previous paragraphs, the initial solution was just good enough while we can observe the platform for similar patterns. If we wouldn’t need to scale up, the initial solution will work reliably for a long time with a low cost.</p>
+<p>However, in a dynamic environment like the PostNL’s logistics infrastructure, no solution remains static for long. As the IoT-Platform grew, the number of assets that we track increased and we needed more types of events that required state machines. With different types of telemetry processing, we needed to check for threshold breaches and generate events based on the changes. For example, position telemetry required a cache to evaluate movement where we needed to compare the current position with the previous position. For accelerometer, we needed to compare the current value with the previous value so that we can generate a breach event based on a threshold. The accelerometer event type was the third strike for us which showed similar patterns. At this moment, we already had enough experience on how to deal with these events and we have seen various requirements that we needed to support. The collected information was invaluable for us, because now we can design the new solution to support all past and (most) future requirements as we have seen much or less all the possibilities with this kind of event processing.</p>
+<p><img src="/images/posts/2023/blog-post-availability-3.png" alt="Evolution"></p>
+<p>The new design of the availability service has exchanged the in-memory cache with AWS ElastiCache for Redis. AWS ElastiCache for Redis is configured for multiple availability zones for high resilience. We used multiple instances to prevent bottlenecks and support automatic fail-over.</p>
+<p>As you can see, there are now multiple services that require a cache. The lambdas are stateless as expected, but they can get information about the previous detections from the Redis cluster and compare it with the current detection. The code for similar functionality is decreased significantly which increases maintainability. By selecting the correct data types in Redis that fit the problem, we enabled high throughput for all services.</p>
+<h2 id="Conclusions"><a href="#Conclusions" class="headerlink" title="Conclusions"></a>Conclusions</h2><p>In a competitive market like logistics and e-commerce, it is important to be lean and agile. This story illustrates how we achieved a fast time to market based on building exactly what we needed. As patterns started to emerge, we evolved and optimized our architecture based on new insights.</p>
+<p>As a concrete example, you can argue that we could have started with the Redis cluster right of the bat and you would have a point. For the sake of discussion, let’s ignore the cost implication of a Redis cluster, because running a cluster on AWS is costly and it is a significant commitment for small projects or early stages of a large project.</p>
+<p>If we started with a Redis implementation right from the start, we would have missed a lot of optimization points that came from observing the system and looking for patterns. Choosing the right configuration for your Redis and the correct data types is not a trivial task. You need to have a lot of insight about how the data will be used. Trying to predict the future with limited knowledge leads to premature optimization. Premature optimization will require rework to fix and you would risk introducing downtime to many services when you make changes to the cache.</p>
+<p>What I am trying to say is that do not rush for decisions until you see enough patterns in your system. A good enough solution allows you to collect information and then you can select the best solution that meets all requirements.</p>
+<p>During long years of development, your systems will definitely need to evolve. With time and more consumers, requirements and the context of your workload will change, and new business features will be introduced. Therefore, when designing your services, it is crucial to consider how you can effectively support and facilitate the necessary evolution.</p>
+<blockquote>
+<p>Embrace evolution, thrive with adaptability!</p>
+</blockquote>
+<p>Thank you for reading our story. I hope you enjoyed this blog post. Happy coding!</p>
+
+  </div>
+</article>
+
+    <div class="blog-post-comments">
+        <div id="disqus_thread">
+            <noscript>Please enable JavaScript to view the comments.</noscript>
+        </div>
+    </div>
+
+
+
+        
+          <div id="footer-post-container">
+  <div id="footer-post">
+
+    <div id="nav-footer" style="display: none">
+      <ul>
+        
+          <li><a href="/">Home</a></li>
+        
+          <li><a href="/about/">About</a></li>
+        
+          <li><a href="/archives/">Writing</a></li>
+        
+          <li><a target="_blank" rel="noopener" href="https://github.com/ssasoglu">Projects</a></li>
+        
+      </ul>
+    </div>
+
+    
+    
+      <div id="toc-footer" style="display: none">
+        <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#The-Problem"><span class="toc-number">1.</span> <span class="toc-text">The Problem</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Initial-Solution"><span class="toc-number">2.</span> <span class="toc-text">Initial Solution</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#Pros"><span class="toc-number">2.1.</span> <span class="toc-text">Pros</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Cons"><span class="toc-number">2.2.</span> <span class="toc-text">Cons</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Evolution-of-the-Initial-Solution"><span class="toc-number">3.</span> <span class="toc-text">Evolution of the Initial Solution</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Conclusions"><span class="toc-number">4.</span> <span class="toc-text">Conclusions</span></a></li></ol>
+      </div>
+    
+
+    <div id="share-footer" style="display: none">
+      <ul>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.facebook.com/sharer.php?u=https://selcuksasoglu.com/2023/05/15/iot-thing-availability-at-scale-in-PostNL/"><i class="fab fa-facebook fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://twitter.com/share?url=https://selcuksasoglu.com/2023/05/15/iot-thing-availability-at-scale-in-PostNL/&text=IoT Thing Availability at Scale in PostNL"><i class="fab fa-twitter fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.linkedin.com/shareArticle?url=https://selcuksasoglu.com/2023/05/15/iot-thing-availability-at-scale-in-PostNL/&title=IoT Thing Availability at Scale in PostNL"><i class="fab fa-linkedin fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://pinterest.com/pin/create/bookmarklet/?url=https://selcuksasoglu.com/2023/05/15/iot-thing-availability-at-scale-in-PostNL/&is_video=false&description=IoT Thing Availability at Scale in PostNL"><i class="fab fa-pinterest fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="mailto:?subject=IoT Thing Availability at Scale in PostNL&body=Check out this article: https://selcuksasoglu.com/2023/05/15/iot-thing-availability-at-scale-in-PostNL/"><i class="fa-solid fa-envelope fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://getpocket.com/save?url=https://selcuksasoglu.com/2023/05/15/iot-thing-availability-at-scale-in-PostNL/&title=IoT Thing Availability at Scale in PostNL"><i class="fab fa-get-pocket fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://reddit.com/submit?url=https://selcuksasoglu.com/2023/05/15/iot-thing-availability-at-scale-in-PostNL/&title=IoT Thing Availability at Scale in PostNL"><i class="fab fa-reddit fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.stumbleupon.com/submit?url=https://selcuksasoglu.com/2023/05/15/iot-thing-availability-at-scale-in-PostNL/&title=IoT Thing Availability at Scale in PostNL"><i class="fab fa-stumbleupon fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://digg.com/submit?url=https://selcuksasoglu.com/2023/05/15/iot-thing-availability-at-scale-in-PostNL/&title=IoT Thing Availability at Scale in PostNL"><i class="fab fa-digg fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.tumblr.com/share/link?url=https://selcuksasoglu.com/2023/05/15/iot-thing-availability-at-scale-in-PostNL/&name=IoT Thing Availability at Scale in PostNL&description="><i class="fab fa-tumblr fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://news.ycombinator.com/submitlink?u=https://selcuksasoglu.com/2023/05/15/iot-thing-availability-at-scale-in-PostNL/&t=IoT Thing Availability at Scale in PostNL"><i class="fab fa-hacker-news fa-lg" aria-hidden="true"></i></a></li>
+</ul>
+
+    </div>
+
+    <div id="actions-footer">
+        <a id="menu" class="icon" href="#" onclick="$('#nav-footer').toggle();return false;"><i class="fa-solid fa-bars fa-lg" aria-hidden="true"></i> Menu</a>
+        
+          <a id="toc" class="icon" href="#" onclick="$('#toc-footer').toggle();return false;"><i class="fa-solid fa-list fa-lg" aria-hidden="true"></i> TOC</a>
+        
+        <a id="share" class="icon" href="#" onclick="$('#share-footer').toggle();return false;"><i class="fa-solid fa-share-alt fa-lg" aria-hidden="true"></i> Share</a>
+        <a id="top" style="display:none" class="icon" href="#" onclick="$('html, body').animate({ scrollTop: 0 }, 'fast');"><i class="fa-solid fa-chevron-up fa-lg" aria-hidden="true"></i> Top</a>
+    </div>
+
+  </div>
+</div>
+
+        
+        <footer id="footer">
+  <div class="footer-left">
+    Copyright &copy;
+    
+    
+    2014-2024
+    Selcuk Sasoglu
+  </div>
+  <div class="footer-right">
+    <nav>
+      <ul>
+        <!--
+       --><li><a href="/">Home</a></li><!--
+     --><!--
+       --><li><a href="/about/">About</a></li><!--
+     --><!--
+       --><li><a href="/archives/">Writing</a></li><!--
+     --><!--
+       --><li><a target="_blank" rel="noopener" href="https://github.com/ssasoglu">Projects</a></li><!--
+     -->
+      </ul>
+    </nav>
+  </div>
+</footer>
+
+    </div>
+    <!-- styles -->
+
+
+
+  <link rel="preload" as="style" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" crossorigin="anonymous" onload="this.onload=null;this.rel='stylesheet'"/>
+
+
+    <!-- jquery -->
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js" crossorigin="anonymous"></script>
+
+
+
+
+<!-- clipboard -->
+
+  
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/clipboard.js/2.0.7/clipboard.min.js" crossorigin="anonymous"></script>
+  
+  <script type="text/javascript">
+  $(function() {
+    // copy-btn HTML
+    var btn = "<span class=\"btn-copy tooltipped tooltipped-sw\" aria-label=\"Copy to clipboard!\">";
+    btn += '<i class="fa-regular fa-clone"></i>';
+    btn += '</span>';
+    // mount it!
+    $(".highlight table").before(btn);
+    var clip = new ClipboardJS('.btn-copy', {
+      text: function(trigger) {
+        return Array.from(trigger.nextElementSibling.querySelectorAll('.code')).reduce((str,it)=>str+it.innerText+'\n','')
+      }
+    });
+    clip.on('success', function(e) {
+      e.trigger.setAttribute('aria-label', "Copied!");
+      e.clearSelection();
+    })
+  })
+  </script>
+
+
+<script src="/js/main.js"></script>
+
+<!-- search -->
+
+<!-- Baidu Analytics -->
+
+<!-- Cloudflare Analytics -->
+
+  <script defer src='https://static.cloudflareinsights.com/beacon.min.js' data-cf-beacon='{"token": "9112ad25ff1c47ba8fa90bea13ceeff2"}'></script>
+
+<!-- Disqus Comments -->
+
+    <script type="text/javascript">
+        var disqus_shortname = 'selcuksasoglu';
+
+        (function(){
+            var dsq = document.createElement('script');
+            dsq.type = 'text/javascript';
+            dsq.async = true;
+            dsq.src = '//' + disqus_shortname + '.disqus.com/embed.js';
+            (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+        }());
+    </script>
+
+<!-- utterances Comments -->
+
+</body>
+</html>

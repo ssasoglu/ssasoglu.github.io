@@ -1,0 +1,452 @@
+<!DOCTYPE html>
+<html lang=en>
+<head>
+    <!-- so meta -->
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="HandheldFriendly" content="True">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=5" />
+    <meta name="description" content="Builder PatternBuilder pattern is one of the creational design patterns which is used in almost all code bases. In this post, I would like to share a different approach to this popular pattern which e">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Builder Pattern With Mandatory Calls">
+<meta property="og:url" content="https://selcuksasoglu.com/2018/12/18/builder-pattern-with-mandatory-calls/index.html">
+<meta property="og:site_name" content="Selcuk Sasoglu">
+<meta property="og:description" content="Builder PatternBuilder pattern is one of the creational design patterns which is used in almost all code bases. In this post, I would like to share a different approach to this popular pattern which e">
+<meta property="og:locale" content="en_US">
+<meta property="og:image" content="https://selcuksasoglu.com/images/posts/2018/intellisense-naive-builder.png">
+<meta property="og:image" content="https://selcuksasoglu.com/images/posts/2018/intellisense-mandatory-name-builder.png">
+<meta property="og:image" content="https://selcuksasoglu.com/images/posts/2018/intellisense-after-mandatory-name-builder.png">
+<meta property="og:image" content="https://selcuksasoglu.com/images/posts/2018/intellisense-after-mandatory-surname-builder.png">
+<meta property="og:image" content="https://selcuksasoglu.com/images/posts/2018/intellisense-after-mandatory-phone-builder.png">
+<meta property="og:image" content="https://selcuksasoglu.com/images/posts/2018/intellisense-final.png">
+<meta property="og:image" content="https://selcuksasoglu.com/images/posts/2018/chain.jpg">
+<meta property="article:published_time" content="2018-12-18T14:02:17.000Z">
+<meta property="article:modified_time" content="2024-04-02T10:44:52.171Z">
+<meta property="article:author" content="Selcuk Sasoglu">
+<meta property="article:tag" content="design patterns">
+<meta property="article:tag" content="builder pattern">
+<meta property="article:tag" content="mandatory">
+<meta property="article:tag" content="step builder">
+<meta property="article:tag" content="smart builder">
+<meta property="article:tag" content="chain builder">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://selcuksasoglu.com/images/posts/2018/intellisense-naive-builder.png">
+    
+    
+      
+        
+          <link rel="shortcut icon" href="/images/favicon.ico">
+        
+      
+      
+        
+          <link rel="icon" type="image/png" href="/images/favicon-192x192.png" sizes="192x192">
+        
+      
+      
+        
+          <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon.png">
+        
+      
+    
+    <!-- title -->
+    <title>Builder Pattern With Mandatory Calls</title>
+    <!-- async scripts -->
+    <!-- Google Analytics -->
+
+
+    <!-- Umami Analytics -->
+
+    <script async defer
+            data-website-id="413684e0-0618-4773-b9c3-309f4740f242"
+            src="https://cloud.umami.is/script.js">
+    </script>
+
+
+    <!-- styles -->
+    
+<link rel="stylesheet" href="/css/style.css">
+
+    <!-- persian styles -->
+    
+    <!-- rss -->
+    
+    
+	<!-- mathjax -->
+	
+<meta name="generator" content="Hexo 6.0.0"></head>
+
+<body class="max-width mx-auto px3 ltr">
+    
+      <div id="header-post">
+  <a id="menu-icon" href="#" aria-label="Menu"><i class="fa-solid fa-bars fa-lg"></i></a>
+  <a id="menu-icon-tablet" href="#" aria-label="Menu"><i class="fa-solid fa-bars fa-lg"></i></a>
+  <a id="top-icon-tablet" href="#" aria-label="Top" onclick="$('html, body').animate({ scrollTop: 0 }, 'fast');" style="display:none;"><i class="fa-solid fa-chevron-up fa-lg"></i></a>
+  <span id="menu">
+    <span id="nav">
+      <ul>
+        <!--
+       --><li><a href="/">Home</a></li><!--
+     --><!--
+       --><li><a href="/about/">About</a></li><!--
+     --><!--
+       --><li><a href="/archives/">Writing</a></li><!--
+     --><!--
+       --><li><a target="_blank" rel="noopener" href="https://github.com/ssasoglu">Projects</a></li><!--
+     -->
+      </ul>
+    </span>
+    <br/>
+    <span id="actions">
+      <ul>
+        
+        <li><a class="icon" aria-label="Previous post" href="/2019/10/03/async-builder/"><i class="fa-solid fa-chevron-left" aria-hidden="true" onmouseover="$('#i-prev').toggle();" onmouseout="$('#i-prev').toggle();"></i></a></li>
+        
+        
+        <li><a class="icon" aria-label="Next post" href="/2017/06/20/basic-git-aliases/"><i class="fa-solid fa-chevron-right" aria-hidden="true" onmouseover="$('#i-next').toggle();" onmouseout="$('#i-next').toggle();"></i></a></li>
+        
+        <li><a class="icon" aria-label="Back to top" href="#" onclick="$('html, body').animate({ scrollTop: 0 }, 'fast');"><i class="fa-solid fa-chevron-up" aria-hidden="true" onmouseover="$('#i-top').toggle();" onmouseout="$('#i-top').toggle();"></i></a></li>
+        <li><a class="icon" aria-label="Share post" href="#"><i class="fa-solid fa-share-alt" aria-hidden="true" onmouseover="$('#i-share').toggle();" onmouseout="$('#i-share').toggle();" onclick="$('#share').toggle();return false;"></i></a></li>
+      </ul>
+      <span id="i-prev" class="info" style="display:none;">Previous post</span>
+      <span id="i-next" class="info" style="display:none;">Next post</span>
+      <span id="i-top" class="info" style="display:none;">Back to top</span>
+      <span id="i-share" class="info" style="display:none;">Share post</span>
+    </span>
+    <br/>
+    <div id="share" style="display: none">
+      <ul>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.facebook.com/sharer.php?u=https://selcuksasoglu.com/2018/12/18/builder-pattern-with-mandatory-calls/"><i class="fab fa-facebook " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://twitter.com/share?url=https://selcuksasoglu.com/2018/12/18/builder-pattern-with-mandatory-calls/&text=Builder Pattern With Mandatory Calls"><i class="fab fa-twitter " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.linkedin.com/shareArticle?url=https://selcuksasoglu.com/2018/12/18/builder-pattern-with-mandatory-calls/&title=Builder Pattern With Mandatory Calls"><i class="fab fa-linkedin " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://pinterest.com/pin/create/bookmarklet/?url=https://selcuksasoglu.com/2018/12/18/builder-pattern-with-mandatory-calls/&is_video=false&description=Builder Pattern With Mandatory Calls"><i class="fab fa-pinterest " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="mailto:?subject=Builder Pattern With Mandatory Calls&body=Check out this article: https://selcuksasoglu.com/2018/12/18/builder-pattern-with-mandatory-calls/"><i class="fa-solid fa-envelope " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://getpocket.com/save?url=https://selcuksasoglu.com/2018/12/18/builder-pattern-with-mandatory-calls/&title=Builder Pattern With Mandatory Calls"><i class="fab fa-get-pocket " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://reddit.com/submit?url=https://selcuksasoglu.com/2018/12/18/builder-pattern-with-mandatory-calls/&title=Builder Pattern With Mandatory Calls"><i class="fab fa-reddit " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.stumbleupon.com/submit?url=https://selcuksasoglu.com/2018/12/18/builder-pattern-with-mandatory-calls/&title=Builder Pattern With Mandatory Calls"><i class="fab fa-stumbleupon " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://digg.com/submit?url=https://selcuksasoglu.com/2018/12/18/builder-pattern-with-mandatory-calls/&title=Builder Pattern With Mandatory Calls"><i class="fab fa-digg " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.tumblr.com/share/link?url=https://selcuksasoglu.com/2018/12/18/builder-pattern-with-mandatory-calls/&name=Builder Pattern With Mandatory Calls&description="><i class="fab fa-tumblr " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://news.ycombinator.com/submitlink?u=https://selcuksasoglu.com/2018/12/18/builder-pattern-with-mandatory-calls/&t=Builder Pattern With Mandatory Calls"><i class="fab fa-hacker-news " aria-hidden="true"></i></a></li>
+</ul>
+
+    </div>
+    
+    
+      <div id="toc">
+        <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#Builder-Pattern"><span class="toc-number">1.</span> <span class="toc-text">Builder Pattern</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#How-do-we-use-it"><span class="toc-number">2.</span> <span class="toc-text">How do we use it?</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Challenge"><span class="toc-number">3.</span> <span class="toc-text">Challenge</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Show-Me-The-Code"><span class="toc-number">4.</span> <span class="toc-text">Show Me The Code</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#Naive-Implementation"><span class="toc-number">4.1.</span> <span class="toc-text">Naive Implementation</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#How-Can-We-Eliminate-Error-Prone-Usages"><span class="toc-number">4.2.</span> <span class="toc-text">How Can We Eliminate Error Prone Usages?</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Add-More-Mandatory-Calls"><span class="toc-number">4.3.</span> <span class="toc-text">Add More Mandatory Calls</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Remarks"><span class="toc-number">4.4.</span> <span class="toc-text">Remarks</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Summary"><span class="toc-number">5.</span> <span class="toc-text">Summary</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#Pros"><span class="toc-number">5.1.</span> <span class="toc-text">Pros</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Cons"><span class="toc-number">5.2.</span> <span class="toc-text">Cons</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#References"><span class="toc-number">6.</span> <span class="toc-text">References</span></a></li></ol>
+      </div>
+    
+  </span>
+</div>
+
+    
+    <div class="content index py4 ">
+        
+        <article class="post h-entry" itemscope itemtype="http://schema.org/BlogPosting">
+  <header>
+    
+    <h1 class="posttitle p-name" itemprop="name headline">
+        Builder Pattern With Mandatory Calls
+    </h1>
+
+
+
+    <div class="meta">
+      <span class="author p-author h-card" itemprop="author" itemscope itemtype="http://schema.org/Person">
+        <span class="p-name" itemprop="name">Selcuk Sasoglu</span>
+      </span>
+      
+    <div class="postdate">
+      
+        <time datetime="2018-12-18T14:02:17.000Z" class="dt-published" itemprop="datePublished">2018-12-18</time>
+        
+      
+    </div>
+
+
+      
+
+      
+    <div class="article-tag">
+        <i class="fa-solid fa-tag"></i>
+        <a class="p-category" href="/tags/builder-pattern/" rel="tag">builder pattern</a>, <a class="p-category" href="/tags/chain-builder/" rel="tag">chain builder</a>, <a class="p-category" href="/tags/design-patterns/" rel="tag">design patterns</a>, <a class="p-category" href="/tags/mandatory/" rel="tag">mandatory</a>, <a class="p-category" href="/tags/smart-builder/" rel="tag">smart builder</a>, <a class="p-category" href="/tags/step-builder/" rel="tag">step builder</a>
+    </div>
+
+
+    </div>
+  </header>
+  
+
+  <div class="content e-content" itemprop="articleBody">
+    <h2 id="Builder-Pattern"><a href="#Builder-Pattern" class="headerlink" title="Builder Pattern"></a>Builder Pattern</h2><p>Builder pattern is one of the creational design patterns which is used in almost all code bases. In this post, I would like to share a different approach to this popular pattern which eliminates error prone usages with high readability.</p>
+<p>First things first, let’s take a look at the <a target="_blank" rel="noopener" href="https://en.wikipedia.org/wiki/Builder_pattern">intent of builder pattern</a></p>
+<blockquote>
+<p>The intent of the Builder design pattern is to separate the construction of a complex object from its representation.</p>
+</blockquote>
+<p>And this intention is to <a target="_blank" rel="noopener" href="https://en.wikipedia.org/wiki/Builder_pattern">solve problems like:</a></p>
+<blockquote>
+<ul>
+<li>How can a class (the same construction process) create different representations of a complex object?</li>
+<li>How can a class that includes creating a complex object be simplified?</li>
+</ul>
+</blockquote>
+<p>In short, we can use builder pattern when we want to create complex objects with ease. The properties of the complex object can also vary depending on usage of the builder class.</p>
+<h2 id="How-do-we-use-it"><a href="#How-do-we-use-it" class="headerlink" title="How do we use it?"></a>How do we use it?</h2><p>In our current project, we are also using builder pattern. In many cases, we have to create the same object type in a flexible way with some optional values. Builder classes can achieve these constructions with ease and the final code is highly readable.</p>
+<h2 id="Challenge"><a href="#Challenge" class="headerlink" title="Challenge"></a>Challenge</h2><p>To fulfill a recent requirement we needed to build an object with a number of mandatory and optional field values together. Optional fields were not a problem, but the mandatory fields had to be initialized when the resulting object is constructed. This is one of the <a target="_blank" rel="noopener" href="https://en.wikipedia.org/wiki/Builder_pattern">weak points of builder pattern.</a></p>
+<blockquote>
+<p>Disadvantages of the Builder pattern include:</p>
+<ul>
+<li>Data members of class aren’t guaranteed to be initialized.</li>
+</ul>
+</blockquote>
+<p>But in our case, anytime the <code>Build()</code> method is called from the builder, we should get back an object which has all the mandatory fields initialized. Handling mandatory fields and keeping the code readable can be a difficult task.</p>
+<p>General approach to dictate mandatory fields is to require them in the constructor of the builder class. On the other hand, in the case of too many mandatory fields, readability of the code decreases significantly and it becomes more difficult track the mandatory parameters. Achieving this functionality and keeping the builder interface developer-friendly is kind of challenging. This post discusses over an approach to solve this challenge. To elaborate further on the topic, here are the options that are generally used when a mix of mandatory and optional fields are used through builder pattern:</p>
+<ul>
+<li>The recommended way with builder pattern is to add all your mandatory parameters to the constructor of the class and keep optional parameters in separate methods. This option is viable if you do not have too many mandatory parameters. Otherwise it can decrease readability of the code.</li>
+<li>Use a combination of factory class that would default mandatory parameters per use case. This option is viable when you don’t have more than 2-3 build cases for the resulting object or some parameters can be defaulted.</li>
+<li>Use several builders and combine the results in the end in object constructor. Each builder will create a part of the final result and they will be combined with a final builder to rule them all. This option can decrease code readability.</li>
+<li>Use builders with mandatory method calls and chain them (chain builders or step builders).</li>
+</ul>
+<p>Decision was to use builders with mandatory method calls which is the main idea to write this blog post and it was fun to brainstorm on it. Basically the idea is to help the developer step by step while making sure that mandatory fields are initialized. I have never seen a similar implementation before we actually created it for our project. But before writing this blog post, I did some search on existing blogs and saw that there were some Java implementations for the same concept. They were called chain builders and step builders. You can see them from the references section.</p>
+<h2 id="Show-Me-The-Code"><a href="#Show-Me-The-Code" class="headerlink" title="Show Me The Code"></a>Show Me The Code</h2><p>If you kept reading so far, it is great. This section is where the fun begins. I will try to give an example using an entity we use almost everyday. We will create a <code>Contact</code> just like the ones on your phone. Let’s consider these requirements:</p>
+<p>In order to create a valid contact, following fields will be mandatory:</p>
+<ul>
+<li>Name</li>
+<li>Surname</li>
+<li>Phone number</li>
+</ul>
+<p>and we will have a few optional fields:</p>
+<ul>
+<li>E-mail address</li>
+<li>Address</li>
+<li>Notes</li>
+</ul>
+<p>and when we call the <code>Build()</code> anytime, resulting <code>Contact</code> object should have the mandatory fields in place.</p>
+<p>Here is our <code>Contact</code> object:</p>
+<figure class="highlight csharp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title">Contact</span></span><br><span class="line">&#123;</span><br><span class="line">  <span class="comment">// Mandatory properties</span></span><br><span class="line">  <span class="keyword">public</span> <span class="built_in">string</span> Name &#123; <span class="keyword">get</span>; <span class="keyword">set</span>; &#125;</span><br><span class="line">  <span class="keyword">public</span> <span class="built_in">string</span> Surname &#123; <span class="keyword">get</span>; <span class="keyword">set</span>; &#125;</span><br><span class="line">  <span class="keyword">public</span> <span class="built_in">string</span> PhoneNumber &#123; <span class="keyword">get</span>; <span class="keyword">set</span>; &#125;</span><br><span class="line">  <span class="comment">// Optional properties</span></span><br><span class="line">  <span class="keyword">public</span> <span class="built_in">string</span> Email &#123; <span class="keyword">get</span>; <span class="keyword">set</span>; &#125;</span><br><span class="line">  <span class="keyword">public</span> <span class="built_in">string</span> Address &#123; <span class="keyword">get</span>; <span class="keyword">set</span>; &#125;</span><br><span class="line">  <span class="keyword">public</span> <span class="built_in">string</span> Notes &#123; <span class="keyword">get</span>; <span class="keyword">set</span>; &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h3 id="Naive-Implementation"><a href="#Naive-Implementation" class="headerlink" title="Naive Implementation"></a>Naive Implementation</h3><p>Please consider this most basic builder implementation in order to understand why it is better to enforce mandatory fields. Note that for simplicity purposes, I skipped any input validation for now.</p>
+<figure class="highlight csharp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="keyword">interface</span> <span class="title">IContactBuilder</span></span><br><span class="line">&#123;</span><br><span class="line">  <span class="function">IContactBuilder <span class="title">WithName</span>(<span class="params"><span class="built_in">string</span> name</span>)</span>;</span><br><span class="line">  <span class="function">IContactBuilder <span class="title">WithSurname</span>(<span class="params"><span class="built_in">string</span> surname</span>)</span>;</span><br><span class="line">  <span class="function">IContactBuilder <span class="title">WithPhone</span>(<span class="params"><span class="built_in">string</span> phoneNumber</span>)</span>;</span><br><span class="line">  <span class="function">IContactBuilder <span class="title">WithEmail</span>(<span class="params"><span class="built_in">string</span> email</span>)</span>;</span><br><span class="line">  <span class="function">IContactBuilder <span class="title">WithAddress</span>(<span class="params"><span class="built_in">string</span> address</span>)</span>;</span><br><span class="line">  <span class="function">IContactBuilder <span class="title">WithNotes</span>(<span class="params"><span class="built_in">string</span> notes</span>)</span>;</span><br><span class="line">  <span class="function">Contact <span class="title">Build</span>()</span>;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title">ContactBuilder</span> : <span class="title">IContactBuilder</span></span><br><span class="line">&#123;</span><br><span class="line">  <span class="keyword">private</span> <span class="keyword">readonly</span> Contact contact;</span><br><span class="line">  <span class="function"><span class="keyword">public</span> <span class="title">ContactBuilder</span>()</span></span><br><span class="line">  &#123;</span><br><span class="line">    contact = <span class="keyword">new</span> Contact();</span><br><span class="line">  &#125;</span><br><span class="line">  <span class="function"><span class="keyword">public</span> IContactBuilder <span class="title">WithName</span>(<span class="params"><span class="built_in">string</span> name</span>)</span></span><br><span class="line">  &#123;</span><br><span class="line">    contact.Name = name;</span><br><span class="line">    <span class="keyword">return</span> <span class="keyword">this</span>;</span><br><span class="line">  &#125;</span><br><span class="line">  <span class="function"><span class="keyword">public</span> IContactBuilder <span class="title">WithSurname</span>(<span class="params"><span class="built_in">string</span> surname</span>)</span></span><br><span class="line">  &#123;</span><br><span class="line">    contact.Surname = surname;</span><br><span class="line">    <span class="keyword">return</span> <span class="keyword">this</span>;</span><br><span class="line">  &#125;</span><br><span class="line">  <span class="function"><span class="keyword">public</span> IContactBuilder <span class="title">WithPhone</span>(<span class="params"><span class="built_in">string</span> phoneNumber</span>)</span></span><br><span class="line">  &#123;</span><br><span class="line">    contact.PhoneNumber = phoneNumber;</span><br><span class="line">    <span class="keyword">return</span> <span class="keyword">this</span>;</span><br><span class="line">  &#125;</span><br><span class="line">  <span class="function"><span class="keyword">public</span> IContactBuilder <span class="title">WithEmail</span>(<span class="params"><span class="built_in">string</span> email</span>)</span></span><br><span class="line">  &#123;</span><br><span class="line">    contact.Email = email;</span><br><span class="line">    <span class="keyword">return</span> <span class="keyword">this</span>;</span><br><span class="line">  &#125;</span><br><span class="line">  <span class="function"><span class="keyword">public</span> IContactBuilder <span class="title">WithAddress</span>(<span class="params"><span class="built_in">string</span> address</span>)</span></span><br><span class="line">  &#123;</span><br><span class="line">    contact.Address = address;</span><br><span class="line">    <span class="keyword">return</span> <span class="keyword">this</span>;</span><br><span class="line">  &#125;</span><br><span class="line">  <span class="function"><span class="keyword">public</span> IContactBuilder <span class="title">WithNotes</span>(<span class="params"><span class="built_in">string</span> notes</span>)</span></span><br><span class="line">  &#123;</span><br><span class="line">    contact.Notes = notes;</span><br><span class="line">    <span class="keyword">return</span> <span class="keyword">this</span>;</span><br><span class="line">  &#125;</span><br><span class="line">  <span class="function"><span class="keyword">public</span> Contact <span class="title">Build</span>()</span></span><br><span class="line">  &#123;</span><br><span class="line">    <span class="keyword">return</span> <span class="keyword">this</span>.contact;</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>And on another class we consume this builder class to create a new instance of <code>Contact</code>.</p>
+<figure class="highlight csharp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title">BuilderConsumerClass</span></span><br><span class="line">&#123;</span><br><span class="line">  <span class="function"><span class="keyword">public</span> <span class="title">BuilderConsumerClass</span>(<span class="params">IContactBuilder builder</span>)</span></span><br><span class="line">  &#123;</span><br><span class="line">    <span class="keyword">var</span> contact = builder</span><br><span class="line">          .Build();</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>This is what intellisense shows about our builder class with its current state:</p>
+<p><img src="/images/posts/2018/intellisense-naive-builder.png" alt="intellisense-naive-implementation"></p>
+<p>So developers using this builder class can call any method in any order right now. The following call is a possible usage by a developer who does not know the requirements that we knew while implementing the builder class.</p>
+<figure class="highlight csharp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">var</span> builder = <span class="keyword">new</span> ContactBuilder();</span><br><span class="line"></span><br><span class="line"><span class="keyword">var</span> contact = builder</span><br><span class="line">                .WithEmail(<span class="string">&quot;none@company.com&quot;</span>)</span><br><span class="line">                .WithNotes(<span class="string">&quot;My notes&quot;</span>)</span><br><span class="line">                .Build();</span><br></pre></td></tr></table></figure>
+
+<p>It is obvious that resulting <code>Contact</code> object violates our requirements. Mandatory fields are not entered yet.</p>
+<h3 id="How-Can-We-Eliminate-Error-Prone-Usages"><a href="#How-Can-We-Eliminate-Error-Prone-Usages" class="headerlink" title="How Can We Eliminate Error Prone Usages?"></a>How Can We Eliminate Error Prone Usages?</h3><p>Well, normally for an example like this, requiring mandatory fields in the builder constructor is a very good approach. But for the sake of discussion let’s imagine that we have too many mandatory fields and using constructor initialization would decrease our code readability.</p>
+<p>We would like to enforce our fellow developers to enter the mandatory fields and only after that they can choose to add optional fields or build the contact object. How can we achieve that? Let’s make <code>Name</code> field mandatory. <code>Name</code> field is handled by <code>WithName()</code> method in the builder class. In order to make <code>WithName()</code> call mandatory, we will extract the method to a new interface and create a chain to <code>IContactBuilder</code>.</p>
+<figure class="highlight csharp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="keyword">interface</span> <span class="title">IContactWithMandatoryNameBuilder</span></span><br><span class="line">&#123;</span><br><span class="line">  <span class="function">IContactBuilder <span class="title">WithName</span>(<span class="params"><span class="built_in">string</span> name</span>)</span>;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">public</span> <span class="keyword">interface</span> <span class="title">IContactBuilder</span></span><br><span class="line">&#123;</span><br><span class="line">  <span class="function">IContactBuilder <span class="title">WithSurname</span>(<span class="params"><span class="built_in">string</span> surname</span>)</span>;</span><br><span class="line">  <span class="function">IContactBuilder <span class="title">WithPhone</span>(<span class="params"><span class="built_in">string</span> phoneNumber</span>)</span>;</span><br><span class="line">  <span class="function">IContactBuilder <span class="title">WithEmail</span>(<span class="params"><span class="built_in">string</span> email</span>)</span>;</span><br><span class="line">  <span class="function">IContactBuilder <span class="title">WithAddress</span>(<span class="params"><span class="built_in">string</span> address</span>)</span>;</span><br><span class="line">  <span class="function">IContactBuilder <span class="title">WithNotes</span>(<span class="params"><span class="built_in">string</span> notes</span>)</span>;</span><br><span class="line">  <span class="function">Contact <span class="title">Build</span>()</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p><code>IContactWithMandatoryNameBuilder</code> will now contain the <code>WithName()</code> method of <code>IContactBuilder</code>. Concrete implementation <code>ContactBuilder</code> will now implement both of these interfaces. Here is how it will look after the refactoring.</p>
+<figure class="highlight csharp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title">ContactBuilder</span> : <span class="title">IContactBuilder</span>, <span class="title">IContactWithMandatoryNameBuilder</span></span><br><span class="line"> &#123;</span><br><span class="line">   <span class="keyword">private</span> <span class="keyword">readonly</span> Contact contact;</span><br><span class="line"></span><br><span class="line">   <span class="function"><span class="keyword">public</span> <span class="title">ContactBuilder</span>()</span></span><br><span class="line">   &#123;</span><br><span class="line">     contact = <span class="keyword">new</span> Contact();</span><br><span class="line">   &#125;</span><br><span class="line"></span><br><span class="line">   <span class="function"><span class="keyword">public</span> IContactBuilder <span class="title">WithName</span>(<span class="params"><span class="built_in">string</span> name</span>)</span></span><br><span class="line">   &#123;</span><br><span class="line">     contact.Name = name;</span><br><span class="line">     <span class="keyword">return</span> <span class="keyword">this</span>;</span><br><span class="line">   &#125;</span><br><span class="line"></span><br><span class="line">   <span class="comment">// ...</span></span><br><span class="line">   <span class="comment">// Rest is the same</span></span><br></pre></td></tr></table></figure>
+
+<p>From now on we will inject <code>IContactWithMandatoryNameBuilder</code> to our consumer class</p>
+<figure class="highlight csharp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title">BuilderConsumerClass</span></span><br><span class="line">&#123;</span><br><span class="line">  <span class="function"><span class="keyword">public</span> <span class="title">BuilderConsumerClass</span>(<span class="params">IContactWithMandatoryNameBuilder builder </span>)</span></span><br><span class="line">  &#123;</span><br><span class="line">    <span class="keyword">var</span> contact = builder</span><br><span class="line">          .WithName(<span class="string">&quot;Alex&quot;</span>)</span><br><span class="line">          .Build();</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>The new interface will show only <code>WithName()</code> method in the intellisense, nothing else:</p>
+<p><img src="/images/posts/2018/intellisense-mandatory-name-builder.png" alt="Intellisense before mandatory call"></p>
+<p>Once the <code>WithName()</code> call has been made, our fellow developers will be able to access the <code>Build()</code> method. Now we guaranteed that <code>Name</code> field will be filled anytime <code>Build()</code> method is called.</p>
+<p><img src="/images/posts/2018/intellisense-after-mandatory-name-builder.png" alt="Intellisense after mandatory call"></p>
+<h3 id="Add-More-Mandatory-Calls"><a href="#Add-More-Mandatory-Calls" class="headerlink" title="Add More Mandatory Calls"></a>Add More Mandatory Calls</h3><p>Now that we have <code>Name</code> field as mandatory on the <code>Contact</code> object, it is simple to add more mandatory method calls. We will add more links to the chain and optional parameters will stay in the final builder interface. Let’s quickly make the remaining two fields <code>Surname</code> and <code>PhoneNumber</code> also mandatory.</p>
+<figure class="highlight csharp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="keyword">interface</span> <span class="title">IContactWithMandatoryNameBuilder</span></span><br><span class="line">&#123;</span><br><span class="line">  <span class="function">IContactWithMandatorySurnameBuilder <span class="title">WithName</span>(<span class="params"><span class="built_in">string</span> name</span>)</span>;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">public</span> <span class="keyword">interface</span> <span class="title">IContactWithMandatorySurnameBuilder</span></span><br><span class="line">&#123;</span><br><span class="line">  <span class="function">IContactWithMandatoryPhoneBuilder <span class="title">WithSurname</span>(<span class="params"><span class="built_in">string</span> surname</span>)</span>;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">public</span> <span class="keyword">interface</span> <span class="title">IContactWithMandatoryPhoneBuilder</span></span><br><span class="line">&#123;</span><br><span class="line">  <span class="function">IContactBuilder <span class="title">WithPhone</span>(<span class="params"><span class="built_in">string</span> phoneNumber</span>)</span>;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">public</span> <span class="keyword">interface</span> <span class="title">IContactBuilder</span></span><br><span class="line">&#123;</span><br><span class="line">  <span class="function">IContactBuilder <span class="title">WithEmail</span>(<span class="params"><span class="built_in">string</span> email</span>)</span>;</span><br><span class="line">  <span class="function">IContactBuilder <span class="title">WithAddress</span>(<span class="params"><span class="built_in">string</span> address</span>)</span>;</span><br><span class="line">  <span class="function">IContactBuilder <span class="title">WithNotes</span>(<span class="params"><span class="built_in">string</span> notes</span>)</span>;</span><br><span class="line">  <span class="function">Contact <span class="title">Build</span>()</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>Please note how the interfaces refer to each other just like links in a chain. In order to access <code>Build()</code> method our fellow developers will need to call <code>WithName()</code>, <code>WithSurname()</code>, <code>WithPhone()</code> methods. Another advantage is that the code is now self-describing. It is obvious that these calls have to be made (which means the fields that handled by these methods need to be filled in). Let’s take a look to final usage:</p>
+<p><img src="/images/posts/2018/intellisense-after-mandatory-surname-builder.png" alt="Intellisense after mandatory surname call"></p>
+<p><img src="/images/posts/2018/intellisense-after-mandatory-phone-builder.png" alt="Intellisense after mandatory phone call"></p>
+<p>As you can see, at this point all the mandatory fields have been handled and it is the only way to access the <code>Build()</code> method. Now the developer can choose whether to add optional fields or not.</p>
+<p><img src="/images/posts/2018/intellisense-final.png" alt="Intellisense final call"></p>
+<h3 id="Remarks"><a href="#Remarks" class="headerlink" title="Remarks"></a>Remarks</h3><p>If you decide to use this approach, please consider the following points:</p>
+<ul>
+<li>Parameters that are related to each other can be grouped in the interface methods so maybe it is possible to shorten the chain.</li>
+<li>If you can only see a few types of <code>Contact</code> being created in the codebase, it might be better to implement factory methods&#x2F;classes in combination with the naive builder class. With that approach you can hide builder class under the hood and only allow calls to factory methods to get back the <code>Contact</code> you need.</li>
+</ul>
+<h2 id="Summary"><a href="#Summary" class="headerlink" title="Summary"></a>Summary</h2><p>Now that we know how it is done, mandatory meme will follow.</p>
+<p><img src="/images/posts/2018/chain.jpg" alt="Chain them all"></p>
+<p>Creational design patterns are frequently used in almost any code base. Having minor tweaks on them, as described in this post, can be handy when you spot a requirement similar to the example. As my final words in this post, I would like to share the pros and cons of using this approach.</p>
+<h3 id="Pros"><a href="#Pros" class="headerlink" title="Pros"></a>Pros</h3><ul>
+<li>Easy to implement</li>
+<li>Easy to understand</li>
+<li>Eliminates error prone usages</li>
+<li>Code is directly reflecting requirements (Self-describing)</li>
+<li>Code readability is high</li>
+</ul>
+<h3 id="Cons"><a href="#Cons" class="headerlink" title="Cons"></a>Cons</h3><ul>
+<li>Unit testing on the link chain will require more effort</li>
+<li>Double check would be necessary on IoC container registrations</li>
+</ul>
+<p>Please let me know what you think in the comments below. I hope you find this post helpful. An example project related to this topic is available in <a target="_blank" rel="noopener" href="https://github.com/ssasoglu/blog-code-examples">blog-code-examples.</a> Special thanks to my team members who helped me brainstorming and implementation on this topic.</p>
+<p>Happy coding!</p>
+<h2 id="References"><a href="#References" class="headerlink" title="References"></a>References</h2><ul>
+<li>Builder Pattern<ul>
+<li><a target="_blank" rel="noopener" href="https://www.dofactory.com/net/builder-design-pattern">GOF</a></li>
+<li><a target="_blank" rel="noopener" href="https://sourcemaking.com/design_patterns/builder">Sourcemaking</a></li>
+</ul>
+</li>
+<li><a target="_blank" rel="noopener" href="https://www.javacodegeeks.com/2013/05/building-smart-builders.html">Smart Builders</a></li>
+<li><a target="_blank" rel="noopener" href="http://rdafbn.blogspot.com/2012/10/step-builder-pattern-definition-and.html">Step Builder</a></li>
+</ul>
+
+  </div>
+</article>
+
+    <div class="blog-post-comments">
+        <div id="disqus_thread">
+            <noscript>Please enable JavaScript to view the comments.</noscript>
+        </div>
+    </div>
+
+
+
+        
+          <div id="footer-post-container">
+  <div id="footer-post">
+
+    <div id="nav-footer" style="display: none">
+      <ul>
+        
+          <li><a href="/">Home</a></li>
+        
+          <li><a href="/about/">About</a></li>
+        
+          <li><a href="/archives/">Writing</a></li>
+        
+          <li><a target="_blank" rel="noopener" href="https://github.com/ssasoglu">Projects</a></li>
+        
+      </ul>
+    </div>
+
+    
+    
+      <div id="toc-footer" style="display: none">
+        <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#Builder-Pattern"><span class="toc-number">1.</span> <span class="toc-text">Builder Pattern</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#How-do-we-use-it"><span class="toc-number">2.</span> <span class="toc-text">How do we use it?</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Challenge"><span class="toc-number">3.</span> <span class="toc-text">Challenge</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Show-Me-The-Code"><span class="toc-number">4.</span> <span class="toc-text">Show Me The Code</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#Naive-Implementation"><span class="toc-number">4.1.</span> <span class="toc-text">Naive Implementation</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#How-Can-We-Eliminate-Error-Prone-Usages"><span class="toc-number">4.2.</span> <span class="toc-text">How Can We Eliminate Error Prone Usages?</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Add-More-Mandatory-Calls"><span class="toc-number">4.3.</span> <span class="toc-text">Add More Mandatory Calls</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Remarks"><span class="toc-number">4.4.</span> <span class="toc-text">Remarks</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Summary"><span class="toc-number">5.</span> <span class="toc-text">Summary</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#Pros"><span class="toc-number">5.1.</span> <span class="toc-text">Pros</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Cons"><span class="toc-number">5.2.</span> <span class="toc-text">Cons</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#References"><span class="toc-number">6.</span> <span class="toc-text">References</span></a></li></ol>
+      </div>
+    
+
+    <div id="share-footer" style="display: none">
+      <ul>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.facebook.com/sharer.php?u=https://selcuksasoglu.com/2018/12/18/builder-pattern-with-mandatory-calls/"><i class="fab fa-facebook fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://twitter.com/share?url=https://selcuksasoglu.com/2018/12/18/builder-pattern-with-mandatory-calls/&text=Builder Pattern With Mandatory Calls"><i class="fab fa-twitter fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.linkedin.com/shareArticle?url=https://selcuksasoglu.com/2018/12/18/builder-pattern-with-mandatory-calls/&title=Builder Pattern With Mandatory Calls"><i class="fab fa-linkedin fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://pinterest.com/pin/create/bookmarklet/?url=https://selcuksasoglu.com/2018/12/18/builder-pattern-with-mandatory-calls/&is_video=false&description=Builder Pattern With Mandatory Calls"><i class="fab fa-pinterest fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="mailto:?subject=Builder Pattern With Mandatory Calls&body=Check out this article: https://selcuksasoglu.com/2018/12/18/builder-pattern-with-mandatory-calls/"><i class="fa-solid fa-envelope fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://getpocket.com/save?url=https://selcuksasoglu.com/2018/12/18/builder-pattern-with-mandatory-calls/&title=Builder Pattern With Mandatory Calls"><i class="fab fa-get-pocket fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://reddit.com/submit?url=https://selcuksasoglu.com/2018/12/18/builder-pattern-with-mandatory-calls/&title=Builder Pattern With Mandatory Calls"><i class="fab fa-reddit fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.stumbleupon.com/submit?url=https://selcuksasoglu.com/2018/12/18/builder-pattern-with-mandatory-calls/&title=Builder Pattern With Mandatory Calls"><i class="fab fa-stumbleupon fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://digg.com/submit?url=https://selcuksasoglu.com/2018/12/18/builder-pattern-with-mandatory-calls/&title=Builder Pattern With Mandatory Calls"><i class="fab fa-digg fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.tumblr.com/share/link?url=https://selcuksasoglu.com/2018/12/18/builder-pattern-with-mandatory-calls/&name=Builder Pattern With Mandatory Calls&description="><i class="fab fa-tumblr fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://news.ycombinator.com/submitlink?u=https://selcuksasoglu.com/2018/12/18/builder-pattern-with-mandatory-calls/&t=Builder Pattern With Mandatory Calls"><i class="fab fa-hacker-news fa-lg" aria-hidden="true"></i></a></li>
+</ul>
+
+    </div>
+
+    <div id="actions-footer">
+        <a id="menu" class="icon" href="#" onclick="$('#nav-footer').toggle();return false;"><i class="fa-solid fa-bars fa-lg" aria-hidden="true"></i> Menu</a>
+        
+          <a id="toc" class="icon" href="#" onclick="$('#toc-footer').toggle();return false;"><i class="fa-solid fa-list fa-lg" aria-hidden="true"></i> TOC</a>
+        
+        <a id="share" class="icon" href="#" onclick="$('#share-footer').toggle();return false;"><i class="fa-solid fa-share-alt fa-lg" aria-hidden="true"></i> Share</a>
+        <a id="top" style="display:none" class="icon" href="#" onclick="$('html, body').animate({ scrollTop: 0 }, 'fast');"><i class="fa-solid fa-chevron-up fa-lg" aria-hidden="true"></i> Top</a>
+    </div>
+
+  </div>
+</div>
+
+        
+        <footer id="footer">
+  <div class="footer-left">
+    Copyright &copy;
+    
+    
+    2014-2024
+    Selcuk Sasoglu
+  </div>
+  <div class="footer-right">
+    <nav>
+      <ul>
+        <!--
+       --><li><a href="/">Home</a></li><!--
+     --><!--
+       --><li><a href="/about/">About</a></li><!--
+     --><!--
+       --><li><a href="/archives/">Writing</a></li><!--
+     --><!--
+       --><li><a target="_blank" rel="noopener" href="https://github.com/ssasoglu">Projects</a></li><!--
+     -->
+      </ul>
+    </nav>
+  </div>
+</footer>
+
+    </div>
+    <!-- styles -->
+
+
+
+  <link rel="preload" as="style" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" crossorigin="anonymous" onload="this.onload=null;this.rel='stylesheet'"/>
+
+
+    <!-- jquery -->
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js" crossorigin="anonymous"></script>
+
+
+
+
+<!-- clipboard -->
+
+  
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/clipboard.js/2.0.7/clipboard.min.js" crossorigin="anonymous"></script>
+  
+  <script type="text/javascript">
+  $(function() {
+    // copy-btn HTML
+    var btn = "<span class=\"btn-copy tooltipped tooltipped-sw\" aria-label=\"Copy to clipboard!\">";
+    btn += '<i class="fa-regular fa-clone"></i>';
+    btn += '</span>';
+    // mount it!
+    $(".highlight table").before(btn);
+    var clip = new ClipboardJS('.btn-copy', {
+      text: function(trigger) {
+        return Array.from(trigger.nextElementSibling.querySelectorAll('.code')).reduce((str,it)=>str+it.innerText+'\n','')
+      }
+    });
+    clip.on('success', function(e) {
+      e.trigger.setAttribute('aria-label', "Copied!");
+      e.clearSelection();
+    })
+  })
+  </script>
+
+
+<script src="/js/main.js"></script>
+
+<!-- search -->
+
+<!-- Baidu Analytics -->
+
+<!-- Cloudflare Analytics -->
+
+  <script defer src='https://static.cloudflareinsights.com/beacon.min.js' data-cf-beacon='{"token": "9112ad25ff1c47ba8fa90bea13ceeff2"}'></script>
+
+<!-- Disqus Comments -->
+
+    <script type="text/javascript">
+        var disqus_shortname = 'selcuksasoglu';
+
+        (function(){
+            var dsq = document.createElement('script');
+            dsq.type = 'text/javascript';
+            dsq.async = true;
+            dsq.src = '//' + disqus_shortname + '.disqus.com/embed.js';
+            (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+        }());
+    </script>
+
+<!-- utterances Comments -->
+
+</body>
+</html>

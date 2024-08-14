@@ -1,0 +1,354 @@
+<!DOCTYPE html>
+<html lang=en>
+<head>
+    <!-- so meta -->
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="HandheldFriendly" content="True">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=5" />
+    <meta name="description" content="As you may know, an exploit was recently detected on SSL 3.0 version, named as Poodle Attack. If you would like to see the details, you can visit here. After the exploit is declared, many of the autho">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Changing Default Security Protocol In WCF">
+<meta property="og:url" content="https://selcuksasoglu.com/2015/08/24/changing-default-security-protocol-from-ssl-3-0-to-tls-1-0-in-wcf/index.html">
+<meta property="og:site_name" content="Selcuk Sasoglu">
+<meta property="og:description" content="As you may know, an exploit was recently detected on SSL 3.0 version, named as Poodle Attack. If you would like to see the details, you can visit here. After the exploit is declared, many of the autho">
+<meta property="og:locale" content="en_US">
+<meta property="og:image" content="https://selcuksasoglu.com/images/posts/2015/SSL-TLS-Diagram.png">
+<meta property="og:image" content="https://selcuksasoglu.com/images/posts/2015/AppDomain.png">
+<meta property="article:published_time" content="2015-08-24T19:32:09.000Z">
+<meta property="article:modified_time" content="2024-04-02T10:44:52.171Z">
+<meta property="article:author" content="Selcuk Sasoglu">
+<meta property="article:tag" content="app-domain">
+<meta property="article:tag" content="poodle attack">
+<meta property="article:tag" content="seperate app-domain">
+<meta property="article:tag" content="ssl">
+<meta property="article:tag" content="tls">
+<meta property="article:tag" content="wcf">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://selcuksasoglu.com/images/posts/2015/SSL-TLS-Diagram.png">
+    
+    
+      
+        
+          <link rel="shortcut icon" href="/images/favicon.ico">
+        
+      
+      
+        
+          <link rel="icon" type="image/png" href="/images/favicon-192x192.png" sizes="192x192">
+        
+      
+      
+        
+          <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon.png">
+        
+      
+    
+    <!-- title -->
+    <title>Changing Default Security Protocol In WCF</title>
+    <!-- async scripts -->
+    <!-- Google Analytics -->
+
+
+    <!-- Umami Analytics -->
+
+    <script async defer
+            data-website-id="413684e0-0618-4773-b9c3-309f4740f242"
+            src="https://cloud.umami.is/script.js">
+    </script>
+
+
+    <!-- styles -->
+    
+<link rel="stylesheet" href="/css/style.css">
+
+    <!-- persian styles -->
+    
+    <!-- rss -->
+    
+    
+	<!-- mathjax -->
+	
+<meta name="generator" content="Hexo 6.0.0"></head>
+
+<body class="max-width mx-auto px3 ltr">
+    
+      <div id="header-post">
+  <a id="menu-icon" href="#" aria-label="Menu"><i class="fa-solid fa-bars fa-lg"></i></a>
+  <a id="menu-icon-tablet" href="#" aria-label="Menu"><i class="fa-solid fa-bars fa-lg"></i></a>
+  <a id="top-icon-tablet" href="#" aria-label="Top" onclick="$('html, body').animate({ scrollTop: 0 }, 'fast');" style="display:none;"><i class="fa-solid fa-chevron-up fa-lg"></i></a>
+  <span id="menu">
+    <span id="nav">
+      <ul>
+        <!--
+       --><li><a href="/">Home</a></li><!--
+     --><!--
+       --><li><a href="/about/">About</a></li><!--
+     --><!--
+       --><li><a href="/archives/">Writing</a></li><!--
+     --><!--
+       --><li><a target="_blank" rel="noopener" href="https://github.com/ssasoglu">Projects</a></li><!--
+     -->
+      </ul>
+    </span>
+    <br/>
+    <span id="actions">
+      <ul>
+        
+        <li><a class="icon" aria-label="Previous post" href="/2016/01/18/from-wordpress-to-static-site-generator/"><i class="fa-solid fa-chevron-left" aria-hidden="true" onmouseover="$('#i-prev').toggle();" onmouseout="$('#i-prev').toggle();"></i></a></li>
+        
+        
+        <li><a class="icon" aria-label="Next post" href="/2015/08/21/team-foundation-server-restore-deleted-files/"><i class="fa-solid fa-chevron-right" aria-hidden="true" onmouseover="$('#i-next').toggle();" onmouseout="$('#i-next').toggle();"></i></a></li>
+        
+        <li><a class="icon" aria-label="Back to top" href="#" onclick="$('html, body').animate({ scrollTop: 0 }, 'fast');"><i class="fa-solid fa-chevron-up" aria-hidden="true" onmouseover="$('#i-top').toggle();" onmouseout="$('#i-top').toggle();"></i></a></li>
+        <li><a class="icon" aria-label="Share post" href="#"><i class="fa-solid fa-share-alt" aria-hidden="true" onmouseover="$('#i-share').toggle();" onmouseout="$('#i-share').toggle();" onclick="$('#share').toggle();return false;"></i></a></li>
+      </ul>
+      <span id="i-prev" class="info" style="display:none;">Previous post</span>
+      <span id="i-next" class="info" style="display:none;">Next post</span>
+      <span id="i-top" class="info" style="display:none;">Back to top</span>
+      <span id="i-share" class="info" style="display:none;">Share post</span>
+    </span>
+    <br/>
+    <div id="share" style="display: none">
+      <ul>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.facebook.com/sharer.php?u=https://selcuksasoglu.com/2015/08/24/changing-default-security-protocol-from-ssl-3-0-to-tls-1-0-in-wcf/"><i class="fab fa-facebook " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://twitter.com/share?url=https://selcuksasoglu.com/2015/08/24/changing-default-security-protocol-from-ssl-3-0-to-tls-1-0-in-wcf/&text=Changing Default Security Protocol In WCF"><i class="fab fa-twitter " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.linkedin.com/shareArticle?url=https://selcuksasoglu.com/2015/08/24/changing-default-security-protocol-from-ssl-3-0-to-tls-1-0-in-wcf/&title=Changing Default Security Protocol In WCF"><i class="fab fa-linkedin " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://pinterest.com/pin/create/bookmarklet/?url=https://selcuksasoglu.com/2015/08/24/changing-default-security-protocol-from-ssl-3-0-to-tls-1-0-in-wcf/&is_video=false&description=Changing Default Security Protocol In WCF"><i class="fab fa-pinterest " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="mailto:?subject=Changing Default Security Protocol In WCF&body=Check out this article: https://selcuksasoglu.com/2015/08/24/changing-default-security-protocol-from-ssl-3-0-to-tls-1-0-in-wcf/"><i class="fa-solid fa-envelope " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://getpocket.com/save?url=https://selcuksasoglu.com/2015/08/24/changing-default-security-protocol-from-ssl-3-0-to-tls-1-0-in-wcf/&title=Changing Default Security Protocol In WCF"><i class="fab fa-get-pocket " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://reddit.com/submit?url=https://selcuksasoglu.com/2015/08/24/changing-default-security-protocol-from-ssl-3-0-to-tls-1-0-in-wcf/&title=Changing Default Security Protocol In WCF"><i class="fab fa-reddit " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.stumbleupon.com/submit?url=https://selcuksasoglu.com/2015/08/24/changing-default-security-protocol-from-ssl-3-0-to-tls-1-0-in-wcf/&title=Changing Default Security Protocol In WCF"><i class="fab fa-stumbleupon " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://digg.com/submit?url=https://selcuksasoglu.com/2015/08/24/changing-default-security-protocol-from-ssl-3-0-to-tls-1-0-in-wcf/&title=Changing Default Security Protocol In WCF"><i class="fab fa-digg " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.tumblr.com/share/link?url=https://selcuksasoglu.com/2015/08/24/changing-default-security-protocol-from-ssl-3-0-to-tls-1-0-in-wcf/&name=Changing Default Security Protocol In WCF&description="><i class="fab fa-tumblr " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://news.ycombinator.com/submitlink?u=https://selcuksasoglu.com/2015/08/24/changing-default-security-protocol-from-ssl-3-0-to-tls-1-0-in-wcf/&t=Changing Default Security Protocol In WCF"><i class="fab fa-hacker-news " aria-hidden="true"></i></a></li>
+</ul>
+
+    </div>
+    
+    
+      <div id="toc">
+        <ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#References"><span class="toc-number">1.</span> <span class="toc-text">References</span></a></li></ol>
+      </div>
+    
+  </span>
+</div>
+
+    
+    <div class="content index py4 ">
+        
+        <article class="post h-entry" itemscope itemtype="http://schema.org/BlogPosting">
+  <header>
+    
+    <h1 class="posttitle p-name" itemprop="name headline">
+        Changing Default Security Protocol In WCF
+    </h1>
+
+
+
+    <div class="meta">
+      <span class="author p-author h-card" itemprop="author" itemscope itemtype="http://schema.org/Person">
+        <span class="p-name" itemprop="name">Selcuk Sasoglu</span>
+      </span>
+      
+    <div class="postdate">
+      
+        <time datetime="2015-08-24T19:32:09.000Z" class="dt-published" itemprop="datePublished">2015-08-24</time>
+        
+      
+    </div>
+
+
+      
+
+      
+    <div class="article-tag">
+        <i class="fa-solid fa-tag"></i>
+        <a class="p-category" href="/tags/app-domain/" rel="tag">app-domain</a>, <a class="p-category" href="/tags/poodle-attack/" rel="tag">poodle attack</a>, <a class="p-category" href="/tags/seperate-app-domain/" rel="tag">seperate app-domain</a>, <a class="p-category" href="/tags/ssl/" rel="tag">ssl</a>, <a class="p-category" href="/tags/tls/" rel="tag">tls</a>, <a class="p-category" href="/tags/wcf/" rel="tag">wcf</a>
+    </div>
+
+
+    </div>
+  </header>
+  
+
+  <div class="content e-content" itemprop="articleBody">
+    <p>As you may know, an exploit was recently detected on SSL 3.0 version, named as Poodle Attack. If you would like to see the details, you can visit <a target="_blank" rel="noopener" href="https://www.openssl.org/~bodo/ssl-poodle.pdf">here</a>. After the exploit is declared, many of the authorities disabled SSL 3.0 connections right away and some of our integrations failed to provide data. Like many enterprise level platforms, our platform also had some external dependencies and operations that required data from these external sources started throwing timeout exceptions. We needed a solution to disable SSL 3.0 connections immediately and change our main protocol to TLS 1.0. If you would like to learn what we needed to change please keep reading.</p>
+<p><img src="/images/posts/2015/SSL-TLS-Diagram.png" alt="SSL-TLS-Diagram"></p>
+<p>After a little research you can easily find that in WCF, <a target="_blank" rel="noopener" href="https://msdn.microsoft.com/en-us/library/system.net.servicepointmanager.securityprotocol.aspx">ServicePointManager</a> determines which security protocol will be used in a client&#x2F;server connection. But the trick is <a target="_blank" rel="noopener" href="https://msdn.microsoft.com/en-us/library/system.net.servicepointmanager.securityprotocol.aspx">ServicePointManager</a> can only be set per application domain. (Not per request) This property has been reported to Microsoft but as you see from <a target="_blank" rel="noopener" href="https://connect.microsoft.com/VisualStudio/feedback/details/605185/cant-set-the-security-protocol-per-servicepoint">here</a>, it is closed as “Won’t fix”. If your client applications work in different app-domains than setting <a target="_blank" rel="noopener" href="https://msdn.microsoft.com/en-us/library/system.net.servicepointmanager.securityprotocol.aspx">ServicePointManager</a> to TLS 1.0 is straight forward. You can see the MSDN example from <a target="_blank" rel="noopener" href="http://msdn.microsoft.com/en-us/library/system.net.securityprotocoltype.aspx">here</a>. But if you have different clients gathered-up in a single solution than the problem starts to arise if you would like to use SSL 3.0 for some of the connections but TLS 1.0 for the rest.</p>
+<p> In this scenario, the integration services tier consists of many WCF web services with a single setup, under a single web site on IIS. Which means, IIS will determine which of these web services will operate on the same app-domain according to the load on the services. Since you can’t control the app-domain placement, you also can’t control which of these services will use TLS 1.0 over SSL 3.0 and we need a solution for that.</p>
+<p><a target="_blank" rel="noopener" href="http://www.superstarcoders.com/blogs/posts/executing-code-in-a-separate-application-domain-using-c-sharp.aspx">This blog post</a> suggests a great solution to execute any code in a seperate app-domain. Solution can be easily applied to the integration services that will use TLS 1.0 protocol so that they will be executed in a seperate app-domain, independent from IIS judgement.</p>
+<figure class="highlight csharp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="keyword">sealed</span> <span class="keyword">class</span> <span class="title">Isolated</span>&lt;<span class="title">T</span>&gt; : <span class="title">IDisposable</span> <span class="keyword">where</span> <span class="title">T</span> : <span class="title">MarshalByRefObject</span></span><br><span class="line">&#123;</span><br><span class="line">    <span class="keyword">private</span> AppDomain _domain;</span><br><span class="line">    <span class="keyword">private</span> T _value;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="title">Isolated</span>()</span></span><br><span class="line">    &#123;</span><br><span class="line">      _domain = AppDomain.CreateDomain(<span class="string">&quot;Isolated:&quot;</span> + Guid.NewGuid(),</span><br><span class="line">          <span class="literal">null</span>, AppDomain.CurrentDomain.SetupInformation);</span><br><span class="line">      Type type = <span class="keyword">typeof</span>(T);</span><br><span class="line">      _value = (T)_domain.CreateInstanceAndUnwrap(type.Assembly.FullName, type.FullName);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">public</span> T Value</span><br><span class="line">    &#123;</span><br><span class="line">      <span class="keyword">get</span> &#123; <span class="keyword">return</span> _value; &#125;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">Dispose</span>()</span></span><br><span class="line">    &#123;</span><br><span class="line">      <span class="keyword">if</span> (_domain != <span class="literal">null</span>)</span><br><span class="line">      &#123;</span><br><span class="line">          AppDomain.Unload(_domain);</span><br><span class="line">          _domain = <span class="literal">null</span>;</span><br><span class="line">      &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>It is straight forward to use what is suggested, but we needed some customization on AppDomain creation. Our integration services keeps connection details securely encrypted in database. And many of these integrations are invoked 3-4 times per second which means each instance will need to access the database to get connection details. We must prevent that for performance issues. An easy solution is creating an singleton AppDomain. So the AppDomain will live as long as there are integration instances in it and each integration service will have its own AppDomain. (So that the <a target="_blank" rel="noopener" href="https://msdn.microsoft.com/en-us/library/system.net.servicepointmanager.securityprotocol.aspx">ServicePointManager</a> can be set for SSL or TLS independently for each integration.) At the end expected visualization of AppDomains will be like this:</p>
+<p><img src="/images/posts/2015/AppDomain.png" alt="AppDomain"></p>
+<p>Customization code is as follows:</p>
+<figure class="highlight csharp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="keyword">sealed</span> <span class="keyword">class</span> <span class="title">CustomAppDomain</span></span><br><span class="line">&#123;</span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">static</span> <span class="keyword">volatile</span> AppDomain instance;</span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">static</span> <span class="built_in">object</span> syncRoot = <span class="keyword">new</span> Object();</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">private</span> <span class="title">CustomAppDomain</span>()</span> &#123; &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">static</span> AppDomain Instance</span><br><span class="line">    &#123;</span><br><span class="line">        <span class="keyword">get</span></span><br><span class="line">        &#123;</span><br><span class="line">            <span class="keyword">if</span> (instance == <span class="literal">null</span>)</span><br><span class="line">            &#123;</span><br><span class="line">                <span class="keyword">lock</span> (syncRoot)</span><br><span class="line">                &#123;</span><br><span class="line">                    <span class="keyword">if</span> (instance == <span class="literal">null</span>)</span><br><span class="line">                    &#123;</span><br><span class="line">                        instance = AppDomain.CreateDomain(<span class="string">&quot;IsolatedAppDomain&quot;</span> + Guid.NewGuid(), <span class="literal">null</span>, AppDomain.CurrentDomain.SetupInformation);</span><br><span class="line">                    &#125;</span><br><span class="line">                &#125;</span><br><span class="line">            &#125;</span><br><span class="line">            <span class="keyword">return</span> instance;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h1 id="References"><a href="#References" class="headerlink" title="References"></a>References</h1><ul>
+<li><a target="_blank" rel="noopener" href="http://www.superstarcoders.com/blogs/posts/executing-code-in-a-separate-application-domain-using-c-sharp.aspx">Executing Code in a Separate Application Domain Using C#</a></li>
+<li><a target="_blank" rel="noopener" href="https://www.openssl.org/~bodo/ssl-poodle.pdf">This POODLE Bites: Exploiting The SSL 3.0 Fallback</a></li>
+<li><a target="_blank" rel="noopener" href="https://msdn.microsoft.com/en-us/library/system.net.servicepointmanager.securityprotocol.aspx">MSDN, ServicePointManager.SecurityProtocol Property</a></li>
+<li><a target="_blank" rel="noopener" href="http://msdn.microsoft.com/en-us/library/system.net.securityprotocoltype.aspx">MSDN, SecurityProtocolType Enumeration</a></li>
+</ul>
+
+  </div>
+</article>
+
+    <div class="blog-post-comments">
+        <div id="disqus_thread">
+            <noscript>Please enable JavaScript to view the comments.</noscript>
+        </div>
+    </div>
+
+
+
+        
+          <div id="footer-post-container">
+  <div id="footer-post">
+
+    <div id="nav-footer" style="display: none">
+      <ul>
+        
+          <li><a href="/">Home</a></li>
+        
+          <li><a href="/about/">About</a></li>
+        
+          <li><a href="/archives/">Writing</a></li>
+        
+          <li><a target="_blank" rel="noopener" href="https://github.com/ssasoglu">Projects</a></li>
+        
+      </ul>
+    </div>
+
+    
+    
+      <div id="toc-footer" style="display: none">
+        <ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#References"><span class="toc-number">1.</span> <span class="toc-text">References</span></a></li></ol>
+      </div>
+    
+
+    <div id="share-footer" style="display: none">
+      <ul>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.facebook.com/sharer.php?u=https://selcuksasoglu.com/2015/08/24/changing-default-security-protocol-from-ssl-3-0-to-tls-1-0-in-wcf/"><i class="fab fa-facebook fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://twitter.com/share?url=https://selcuksasoglu.com/2015/08/24/changing-default-security-protocol-from-ssl-3-0-to-tls-1-0-in-wcf/&text=Changing Default Security Protocol In WCF"><i class="fab fa-twitter fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.linkedin.com/shareArticle?url=https://selcuksasoglu.com/2015/08/24/changing-default-security-protocol-from-ssl-3-0-to-tls-1-0-in-wcf/&title=Changing Default Security Protocol In WCF"><i class="fab fa-linkedin fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://pinterest.com/pin/create/bookmarklet/?url=https://selcuksasoglu.com/2015/08/24/changing-default-security-protocol-from-ssl-3-0-to-tls-1-0-in-wcf/&is_video=false&description=Changing Default Security Protocol In WCF"><i class="fab fa-pinterest fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="mailto:?subject=Changing Default Security Protocol In WCF&body=Check out this article: https://selcuksasoglu.com/2015/08/24/changing-default-security-protocol-from-ssl-3-0-to-tls-1-0-in-wcf/"><i class="fa-solid fa-envelope fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://getpocket.com/save?url=https://selcuksasoglu.com/2015/08/24/changing-default-security-protocol-from-ssl-3-0-to-tls-1-0-in-wcf/&title=Changing Default Security Protocol In WCF"><i class="fab fa-get-pocket fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://reddit.com/submit?url=https://selcuksasoglu.com/2015/08/24/changing-default-security-protocol-from-ssl-3-0-to-tls-1-0-in-wcf/&title=Changing Default Security Protocol In WCF"><i class="fab fa-reddit fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.stumbleupon.com/submit?url=https://selcuksasoglu.com/2015/08/24/changing-default-security-protocol-from-ssl-3-0-to-tls-1-0-in-wcf/&title=Changing Default Security Protocol In WCF"><i class="fab fa-stumbleupon fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://digg.com/submit?url=https://selcuksasoglu.com/2015/08/24/changing-default-security-protocol-from-ssl-3-0-to-tls-1-0-in-wcf/&title=Changing Default Security Protocol In WCF"><i class="fab fa-digg fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.tumblr.com/share/link?url=https://selcuksasoglu.com/2015/08/24/changing-default-security-protocol-from-ssl-3-0-to-tls-1-0-in-wcf/&name=Changing Default Security Protocol In WCF&description="><i class="fab fa-tumblr fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://news.ycombinator.com/submitlink?u=https://selcuksasoglu.com/2015/08/24/changing-default-security-protocol-from-ssl-3-0-to-tls-1-0-in-wcf/&t=Changing Default Security Protocol In WCF"><i class="fab fa-hacker-news fa-lg" aria-hidden="true"></i></a></li>
+</ul>
+
+    </div>
+
+    <div id="actions-footer">
+        <a id="menu" class="icon" href="#" onclick="$('#nav-footer').toggle();return false;"><i class="fa-solid fa-bars fa-lg" aria-hidden="true"></i> Menu</a>
+        
+          <a id="toc" class="icon" href="#" onclick="$('#toc-footer').toggle();return false;"><i class="fa-solid fa-list fa-lg" aria-hidden="true"></i> TOC</a>
+        
+        <a id="share" class="icon" href="#" onclick="$('#share-footer').toggle();return false;"><i class="fa-solid fa-share-alt fa-lg" aria-hidden="true"></i> Share</a>
+        <a id="top" style="display:none" class="icon" href="#" onclick="$('html, body').animate({ scrollTop: 0 }, 'fast');"><i class="fa-solid fa-chevron-up fa-lg" aria-hidden="true"></i> Top</a>
+    </div>
+
+  </div>
+</div>
+
+        
+        <footer id="footer">
+  <div class="footer-left">
+    Copyright &copy;
+    
+    
+    2014-2024
+    Selcuk Sasoglu
+  </div>
+  <div class="footer-right">
+    <nav>
+      <ul>
+        <!--
+       --><li><a href="/">Home</a></li><!--
+     --><!--
+       --><li><a href="/about/">About</a></li><!--
+     --><!--
+       --><li><a href="/archives/">Writing</a></li><!--
+     --><!--
+       --><li><a target="_blank" rel="noopener" href="https://github.com/ssasoglu">Projects</a></li><!--
+     -->
+      </ul>
+    </nav>
+  </div>
+</footer>
+
+    </div>
+    <!-- styles -->
+
+
+
+  <link rel="preload" as="style" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" crossorigin="anonymous" onload="this.onload=null;this.rel='stylesheet'"/>
+
+
+    <!-- jquery -->
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js" crossorigin="anonymous"></script>
+
+
+
+
+<!-- clipboard -->
+
+  
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/clipboard.js/2.0.7/clipboard.min.js" crossorigin="anonymous"></script>
+  
+  <script type="text/javascript">
+  $(function() {
+    // copy-btn HTML
+    var btn = "<span class=\"btn-copy tooltipped tooltipped-sw\" aria-label=\"Copy to clipboard!\">";
+    btn += '<i class="fa-regular fa-clone"></i>';
+    btn += '</span>';
+    // mount it!
+    $(".highlight table").before(btn);
+    var clip = new ClipboardJS('.btn-copy', {
+      text: function(trigger) {
+        return Array.from(trigger.nextElementSibling.querySelectorAll('.code')).reduce((str,it)=>str+it.innerText+'\n','')
+      }
+    });
+    clip.on('success', function(e) {
+      e.trigger.setAttribute('aria-label', "Copied!");
+      e.clearSelection();
+    })
+  })
+  </script>
+
+
+<script src="/js/main.js"></script>
+
+<!-- search -->
+
+<!-- Baidu Analytics -->
+
+<!-- Cloudflare Analytics -->
+
+  <script defer src='https://static.cloudflareinsights.com/beacon.min.js' data-cf-beacon='{"token": "9112ad25ff1c47ba8fa90bea13ceeff2"}'></script>
+
+<!-- Disqus Comments -->
+
+    <script type="text/javascript">
+        var disqus_shortname = 'selcuksasoglu';
+
+        (function(){
+            var dsq = document.createElement('script');
+            dsq.type = 'text/javascript';
+            dsq.async = true;
+            dsq.src = '//' + disqus_shortname + '.disqus.com/embed.js';
+            (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+        }());
+    </script>
+
+<!-- utterances Comments -->
+
+</body>
+</html>
