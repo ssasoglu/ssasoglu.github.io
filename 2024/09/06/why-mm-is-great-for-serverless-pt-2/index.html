@@ -1,0 +1,428 @@
+<!DOCTYPE html>
+<html lang=en>
+<head>
+    <!-- so meta -->
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="HandheldFriendly" content="True">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=5" />
+    <meta name="description" content="In Part 1, we explored the various applications at PostNL, including planning, operation execution monitoring, and enabler applications, each with unique requirements. We discussed different architec">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Why Modular Monolith is a great starting architecture for a serverless application (Part 2)">
+<meta property="og:url" content="https://selcuksasoglu.com/2024/09/06/why-mm-is-great-for-serverless-pt-2/index.html">
+<meta property="og:site_name" content="Selcuk Sasoglu">
+<meta property="og:description" content="In Part 1, we explored the various applications at PostNL, including planning, operation execution monitoring, and enabler applications, each with unique requirements. We discussed different architec">
+<meta property="og:locale" content="en_US">
+<meta property="og:image" content="https://selcuksasoglu.com/images/posts/2024/why_mm_cover_2.jpg">
+<meta property="og:image" content="https://selcuksasoglu.com/images/posts/2024/smm.png">
+<meta property="og:image" content="https://selcuksasoglu.com/images/posts/2024/example-system.png">
+<meta property="og:image" content="https://selcuksasoglu.com/images/posts/2024/platform-repo.png">
+<meta property="og:image" content="https://selcuksasoglu.com/images/posts/2024/orchestration.png">
+<meta property="og:image" content="https://selcuksasoglu.com/images/posts/2024/module.png">
+<meta property="og:image" content="https://selcuksasoglu.com/images/posts/2024/versioning-1.png">
+<meta property="og:image" content="https://selcuksasoglu.com/images/posts/2024/versioning-2.png">
+<meta property="og:image" content="https://selcuksasoglu.com/images/posts/2024/sidecar.png">
+<meta property="og:image" content="https://selcuksasoglu.com/images/posts/2024/a-b-testing.png">
+<meta property="article:published_time" content="2024-09-06T11:55:48.000Z">
+<meta property="article:modified_time" content="2024-11-08T14:50:40.821Z">
+<meta property="article:author" content="Selcuk Sasoglu">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://selcuksasoglu.com/images/posts/2024/why_mm_cover_2.jpg">
+    
+    
+      
+        
+          <link rel="shortcut icon" href="/images/favicon.ico">
+        
+      
+      
+        
+          <link rel="icon" type="image/png" href="/images/favicon-192x192.png" sizes="192x192">
+        
+      
+      
+        
+          <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon.png">
+        
+      
+    
+    <!-- title -->
+    <title>Why Modular Monolith is a great starting architecture for a serverless application (Part 2)</title>
+    <!-- async scripts -->
+    <!-- Google Analytics -->
+
+
+    <!-- Umami Analytics -->
+
+    <script async defer
+            data-website-id="413684e0-0618-4773-b9c3-309f4740f242"
+            src="https://cloud.umami.is/script.js">
+    </script>
+
+
+    <!-- styles -->
+    
+<link rel="stylesheet" href="/css/style.css">
+
+    <!-- persian styles -->
+    
+    <!-- rss -->
+    
+    
+	<!-- mathjax -->
+	
+<meta name="generator" content="Hexo 6.0.0"></head>
+
+<body class="max-width mx-auto px3 ltr">
+    
+      <div id="header-post">
+  <a id="menu-icon" href="#" aria-label="Menu"><i class="fa-solid fa-bars fa-lg"></i></a>
+  <a id="menu-icon-tablet" href="#" aria-label="Menu"><i class="fa-solid fa-bars fa-lg"></i></a>
+  <a id="top-icon-tablet" href="#" aria-label="Top" onclick="$('html, body').animate({ scrollTop: 0 }, 'fast');" style="display:none;"><i class="fa-solid fa-chevron-up fa-lg"></i></a>
+  <span id="menu">
+    <span id="nav">
+      <ul>
+        <!--
+       --><li><a href="/">Home</a></li><!--
+     --><!--
+       --><li><a href="/about/">About</a></li><!--
+     --><!--
+       --><li><a href="/archives/">Writing</a></li><!--
+     --><!--
+       --><li><a target="_blank" rel="noopener" href="https://github.com/ssasoglu">Projects</a></li><!--
+     -->
+      </ul>
+    </span>
+    <br/>
+    <span id="actions">
+      <ul>
+        
+        
+        <li><a class="icon" aria-label="Next post" href="/2024/09/06/why-mm-is-great-for-serverless-pt-1/"><i class="fa-solid fa-chevron-right" aria-hidden="true" onmouseover="$('#i-next').toggle();" onmouseout="$('#i-next').toggle();"></i></a></li>
+        
+        <li><a class="icon" aria-label="Back to top" href="#" onclick="$('html, body').animate({ scrollTop: 0 }, 'fast');"><i class="fa-solid fa-chevron-up" aria-hidden="true" onmouseover="$('#i-top').toggle();" onmouseout="$('#i-top').toggle();"></i></a></li>
+        <li><a class="icon" aria-label="Share post" href="#"><i class="fa-solid fa-share-alt" aria-hidden="true" onmouseover="$('#i-share').toggle();" onmouseout="$('#i-share').toggle();" onclick="$('#share').toggle();return false;"></i></a></li>
+      </ul>
+      <span id="i-prev" class="info" style="display:none;">Previous post</span>
+      <span id="i-next" class="info" style="display:none;">Next post</span>
+      <span id="i-top" class="info" style="display:none;">Back to top</span>
+      <span id="i-share" class="info" style="display:none;">Share post</span>
+    </span>
+    <br/>
+    <div id="share" style="display: none">
+      <ul>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.facebook.com/sharer.php?u=https://selcuksasoglu.com/2024/09/06/why-mm-is-great-for-serverless-pt-2/"><i class="fab fa-facebook " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://twitter.com/share?url=https://selcuksasoglu.com/2024/09/06/why-mm-is-great-for-serverless-pt-2/&text=Why Modular Monolith is a great starting architecture for a serverless application (Part 2)"><i class="fab fa-twitter " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.linkedin.com/shareArticle?url=https://selcuksasoglu.com/2024/09/06/why-mm-is-great-for-serverless-pt-2/&title=Why Modular Monolith is a great starting architecture for a serverless application (Part 2)"><i class="fab fa-linkedin " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://pinterest.com/pin/create/bookmarklet/?url=https://selcuksasoglu.com/2024/09/06/why-mm-is-great-for-serverless-pt-2/&is_video=false&description=Why Modular Monolith is a great starting architecture for a serverless application (Part 2)"><i class="fab fa-pinterest " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="mailto:?subject=Why Modular Monolith is a great starting architecture for a serverless application (Part 2)&body=Check out this article: https://selcuksasoglu.com/2024/09/06/why-mm-is-great-for-serverless-pt-2/"><i class="fa-solid fa-envelope " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://getpocket.com/save?url=https://selcuksasoglu.com/2024/09/06/why-mm-is-great-for-serverless-pt-2/&title=Why Modular Monolith is a great starting architecture for a serverless application (Part 2)"><i class="fab fa-get-pocket " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://reddit.com/submit?url=https://selcuksasoglu.com/2024/09/06/why-mm-is-great-for-serverless-pt-2/&title=Why Modular Monolith is a great starting architecture for a serverless application (Part 2)"><i class="fab fa-reddit " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.stumbleupon.com/submit?url=https://selcuksasoglu.com/2024/09/06/why-mm-is-great-for-serverless-pt-2/&title=Why Modular Monolith is a great starting architecture for a serverless application (Part 2)"><i class="fab fa-stumbleupon " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://digg.com/submit?url=https://selcuksasoglu.com/2024/09/06/why-mm-is-great-for-serverless-pt-2/&title=Why Modular Monolith is a great starting architecture for a serverless application (Part 2)"><i class="fab fa-digg " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.tumblr.com/share/link?url=https://selcuksasoglu.com/2024/09/06/why-mm-is-great-for-serverless-pt-2/&name=Why Modular Monolith is a great starting architecture for a serverless application (Part 2)&description="><i class="fab fa-tumblr " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://news.ycombinator.com/submitlink?u=https://selcuksasoglu.com/2024/09/06/why-mm-is-great-for-serverless-pt-2/&t=Why Modular Monolith is a great starting architecture for a serverless application (Part 2)"><i class="fab fa-hacker-news " aria-hidden="true"></i></a></li>
+</ul>
+
+    </div>
+    
+    
+      <div id="toc">
+        <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#Serverless-Modular-Monolith"><span class="toc-number">1.</span> <span class="toc-text">Serverless Modular Monolith</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#Serverless-Modules"><span class="toc-number">1.1.</span> <span class="toc-text">Serverless Modules</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Distinction-between-Modules-and-Microservices"><span class="toc-number">1.2.</span> <span class="toc-text">Distinction between Modules and Microservices</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Practical-Benefits-in-Action"><span class="toc-number">1.3.</span> <span class="toc-text">Practical Benefits in Action</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#Version-migrations"><span class="toc-number">1.3.1.</span> <span class="toc-text">Version migrations</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#Side-cars"><span class="toc-number">1.3.2.</span> <span class="toc-text">Side-cars</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#A-B-Testing"><span class="toc-number">1.3.3.</span> <span class="toc-text">A-B Testing</span></a></li></ol></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Evolving-Towards-Microservices"><span class="toc-number">2.</span> <span class="toc-text">Evolving Towards Microservices</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Recap-and-Conclusions"><span class="toc-number">3.</span> <span class="toc-text">Recap and Conclusions</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#References"><span class="toc-number">4.</span> <span class="toc-text">References</span></a></li></ol>
+      </div>
+    
+  </span>
+</div>
+
+    
+    <div class="content index py4 ">
+        
+        <article class="post h-entry" itemscope itemtype="http://schema.org/BlogPosting">
+  <header>
+    
+    <h1 class="posttitle p-name" itemprop="name headline">
+        Why Modular Monolith is a great starting architecture for a serverless application (Part 2)
+    </h1>
+
+
+
+    <div class="meta">
+      <span class="author p-author h-card" itemprop="author" itemscope itemtype="http://schema.org/Person">
+        <span class="p-name" itemprop="name">Selcuk Sasoglu</span>
+      </span>
+      
+    <div class="postdate">
+      
+        <time datetime="2024-09-06T11:55:48.000Z" class="dt-published" itemprop="datePublished">2024-09-06</time>
+        
+      
+    </div>
+
+
+      
+
+      
+
+    </div>
+  </header>
+  
+
+  <div class="content e-content" itemprop="articleBody">
+    <p><img src="/images/posts/2024/why_mm_cover_2.jpg" alt="mm-series"></p>
+<p>In <a href="./why-mm-is-great-for-serverless-pt-1.md">Part 1</a>, we explored the various applications at PostNL, including planning, operation execution monitoring, and enabler applications, each with unique requirements. We discussed different architectural styles: Monolithic, fully serverless, and serverless microservices, highlighting their pros and cons. At the end of part one, we introduced the concept of the “Serverless Modular Monolith”, setting the stage for a deeper dive in part two. In this part, we will discuss how we are building such systems and the practical benefits they offer. Without further ado, let’s start!</p>
+<h2 id="Serverless-Modular-Monolith"><a href="#Serverless-Modular-Monolith" class="headerlink" title="Serverless Modular Monolith"></a>Serverless Modular Monolith</h2><p><img src="/images/posts/2024/smm.png" alt="smm"></p>
+<p>The first question is “How do we build our “Serverless Modular Monolith” systems?”</p>
+<p>“Serverless Modular Monolith” name might not make any sense because how can a system be serverless and a monolith at the same time? It requires some additional context. Please let me explain.</p>
+<p>It is easier to explain the concept through an example, so let’s consider the following system:</p>
+<p><img src="/images/posts/2024/example-system.png" alt="serverless-vs-bbm"></p>
+<p>In this example system, we deploy a single AWS CDK Application which resides in its own GitHub repository.</p>
+<p><img src="/images/posts/2024/platform-repo.png" alt="platform-repo"></p>
+<p>The main CDK project that is shown in the diagram contains only the scaffolding and orchestration of inner modules. There is no business logic in this repository. The business logic that defines the functionalities of the application is handled by the inner modules, which we will cover later. In essence, the overall system is a single CDK application, hence the “monolith” in the name.</p>
+<p>Each module within the main CDK application is a dependency and is deployed as a nested Cloudformation stack. The connection between modules and the orchestration of data flow is managed by this CDK application which is where the “modular” aspect comes into play. Note that the entire application is deployed at the same time as a single unit, so it will either succeed or fail altogether.</p>
+<p><img src="/images/posts/2024/orchestration.png" alt="orchestration"></p>
+<h3 id="Serverless-Modules"><a href="#Serverless-Modules" class="headerlink" title="Serverless Modules"></a>Serverless Modules</h3><p>The serverless modules are stored in their respective Git repositories, where the final artifact is a library which contains the necessary infrastructure code for the nested AWS CDK Stack.</p>
+<p>For isolation between modules, in most cases, we design our modules to consume and publish their data via AWS integration services like SNS, SQS, EventBridge or Kinesis.</p>
+<p>Once development is complete and the module is ready for release, we create a TypeScript library using the AWS CDK infrastructure code. This library is versioned and stored in our package manager, ready for integration into the main CDK application. The main CDK application will then add the module as a dependency by referencing this library version.</p>
+<p><img src="/images/posts/2024/module.png" alt="module"></p>
+<p>The main CDK application has dependencies on all the modules with versioning, manages the connections between these modules, and determines the data flow by connecting the necessary integration services between the modules. In some cases, key integration services or components like an EventBus on the EventBridge can be created by the main application and connect the modules to establish the producer&#x2F;consumer relation.</p>
+<p>Module connections also determine the order of deployment. Fortunately, we do not have think about it or manage it ourselves, and this is one of the <em>core competencies of “Serverless Modular Monolith”s</em>. AWS CDK manages these dependencies during the deployments and deploys the modules in the correct order. This aspect alone saves significant amount of time for complex systems.</p>
+<p>Once the CDK app is successfully deployed, each module can work in isolation thanks to the integration services in between (SNS, SQS, EventBridge, Kinesis … etc.). From that point forward, the modules will scale up and down automatically, behaving similarly to microservices.</p>
+<p>After the first deployment, AWS CDK will make comparisons to the existing application with all its modules and compare the state before making changes to the infrastructure and it is smart only to update the parts that we have updated. In most of the cases, this state transition is seamless and does not require manual planning. AWS CDK will create new resources and replace the old ones without interrupting the running services. As a rule of thumb, we should be careful about changes in data persistence, but this is topic too far detailed and needs to be discussed separately than this post.</p>
+<p>As a recap, here are the list of best practices that we follow while building these so-called “Modules”:</p>
+<ul>
+<li><strong>Single Responsibility:</strong> Each module has a single responsibility and is isolated from any other module.</li>
+<li><strong>Isolation and Testing:</strong> Modules can be deployed individually for testing purposes, allowing extensive integration tests to validate behavior before they are plugged into the main application.</li>
+<li><strong>Versioning:</strong> Each module is versioned so its development can progress independently of other modules.</li>
+<li><strong>Scalability:</strong> Modules scale up and down depending on the hot-spots within the applications, thanks to their independence and connection through integration services.</li>
+<li><strong>Cost Efficiency:</strong> We can tag each module to track individual costs and improve cost efficiency if necessary.</li>
+<li><strong>Logical Boundaries:</strong> Modules have logical boundaries, which, combined with their single responsibility, make the overall system easy to reason with. This approach ensures a good developer experience and low cognitive load during development.</li>
+</ul>
+<h3 id="Distinction-between-Modules-and-Microservices"><a href="#Distinction-between-Modules-and-Microservices" class="headerlink" title="Distinction between Modules and Microservices"></a>Distinction between Modules and Microservices</h3><p>Modules and microservices differ on multiple aspects, but here are the key ones from my perspective:</p>
+<ul>
+<li><strong>Deployment:</strong> Modules are deployed as nested CDK stacks within the main CDK application, while microservices are deployed as separate AWS CDK applications. Therefore, microservices require complex deployment orchestration and strategies. Developers are responsible for managing the dependencies between microservices.</li>
+<li><strong>Versioning &amp; Updates:</strong> Updates in microservices require careful coordination between services for breaking changes and additional testing is necessary on overall system level to make sure that the changes are compatible. The same is also true for modules, but the effort is much lower, because overall system is deployed as a single unit.</li>
+<li><strong>Integration:</strong> Changes in bounded contexts are more complex to manage in microservices and getting them right requires a good understanding of the overall system. When bounded contexts are not right, we will be risking difficult challenges like <a target="_blank" rel="noopener" href="https://en.wikipedia.org/wiki/Distributed_transaction">“Distributed Transactions”</a>.</li>
+</ul>
+<h3 id="Practical-Benefits-in-Action"><a href="#Practical-Benefits-in-Action" class="headerlink" title="Practical Benefits in Action"></a>Practical Benefits in Action</h3><p>There are a number of practical benefits of using “Serverless Modular Monolith”. In the following list, I would like to summarize the ones that we use a lot:</p>
+<ul>
+<li>Smooth version migrations with backward compatibility</li>
+<li>Side-cars,</li>
+<li>A-B Testing.</li>
+</ul>
+<h4 id="Version-migrations"><a href="#Version-migrations" class="headerlink" title="Version migrations"></a>Version migrations</h4><p>In this first scenario, let’s assume that we have been running the Rollcage-Processing-Module in v1 for some time and we are now ready to deploy v2. In the following figures, other modules are not shown for simplicity.</p>
+<p>In a “Serverless Modular Monolith” architecture, we have the possibility to deploy two versions of the same module. There are multiple ways to achieve that, but here are the first two approaches that comes to mind:</p>
+<ul>
+<li>Make a name change in the library and deploy it like a new module along with the previous version. (Like Rollcage-Processing-Module-v2)</li>
+<li>Hide the new version functionality behind a feature flag and deploy another instance of the the same module with feature flag enabled.</li>
+</ul>
+<p><img src="/images/posts/2024/versioning-1.png" alt="versioning-1"></p>
+<p>When we select one of the above approaches and deploy two versions, we can run them together until we are ready to phase out v1. Phase out criteria might depend on the situation. Some possible scenarios could be:</p>
+<ul>
+<li>Until the cache of the new version catches up with the old one.</li>
+<li>If this was an outlet module where other teams were dependent on your system, we can wait until all teams migrate to v2.</li>
+</ul>
+<p><img src="/images/posts/2024/versioning-2.png" alt="versioning-2"></p>
+<p>Once the phase out requirements are met, we can decommission v1 and continue our development through v2.</p>
+<p>This approach ensures backward compatibility during the entire process and allows stakeholders to catch up at their own pace using communicated sunset dates for older versions.</p>
+<h4 id="Side-cars"><a href="#Side-cars" class="headerlink" title="Side-cars"></a>Side-cars</h4><p>Another possibility is to add a <a target="_blank" rel="noopener" href="https://learn.microsoft.com/en-us/azure/architecture/patterns/sidecar">side-car</a> module. This pattern is named “Side-car” because it resembles a side-car attached to a motorcycle. In this pattern, the side-car is attached to a parent application and provides supporting features for the application. This allows us to decompose some features into a separate module. A sample use case could be as follows:</p>
+<p>A module for processing incoming events is required to store the last 60 days of events in storage. In this use case, the persistence responsibility can be offloaded to a side car which keeps the business logic in processing module simple.</p>
+<p><img src="/images/posts/2024/sidecar.png" alt="side-car"></p>
+<h4 id="A-B-Testing"><a href="#A-B-Testing" class="headerlink" title="A-B Testing"></a>A-B Testing</h4><p>The “Serverless Modular Monolith” architecture also makes A-B testing straightforward. Let’s say that you want to add analytics and see two possible ways to extract data from the system, but you do not know which one would work better. This is an exploration case where we don’t know the outcome of the research yet, and the approach includes a “Sacrificial Architecture.” It is easy to connect both and see which one performs better. Simply sacrifice the other once we are happy with the results.</p>
+<p><img src="/images/posts/2024/a-b-testing.png" alt="a-b-testing"></p>
+<h2 id="Evolving-Towards-Microservices"><a href="#Evolving-Towards-Microservices" class="headerlink" title="Evolving Towards Microservices"></a>Evolving Towards Microservices</h2><p>As our applications grow, there’s always the potential to evolve them into fully distributed microservices. By carefully managing the bounded contexts within our applications, we can split a modular monolithic system into multiple microservices, each with its own AWS account. We can also assign responsibility to multiple teams and manage complexity effectively.</p>
+<p>The ability to evolve from a modular monolith to microservices without a complete architectural overhaul is one of the key benefits of the “Serverless Modular Monolith”. This approach allows us to find the balance between stability and flexibility so that we can continue to adapt and grow.</p>
+<h2 id="Recap-and-Conclusions"><a href="#Recap-and-Conclusions" class="headerlink" title="Recap and Conclusions"></a>Recap and Conclusions</h2><p>Throughout the series, we’ve explored the advantages of the “Serverless Modular Monolith” and how it can address the evolving needs of modern applications. By balancing simplicity, scalability, and adaptability, this architecture enables us to start small, evolve incrementally, and manage complexity effectively.</p>
+<p>We have covered the following benefits of the “Serverless Modular Monolith”:</p>
+<ul>
+<li><p>Modular design mitigates common challenges and opens possibility to evolve towards microservices without complete overhaul of the system:</p>
+<ul>
+<li>Less cognitive load for developers and easy to reason with the overall system.</li>
+<li>Loose coupling, high functional cohesion</li>
+</ul>
+</li>
+<li><p>AWS CDK simplifies the application deployment to a single command: <code>cdk deploy</code> and handles complex deployment orchestration, especially during early development phase.</p>
+<ul>
+<li>We do not need to think about deployment strategies right from the start.</li>
+<li>Only the first deployment is a monolith, after that in each deployment AWS CDK is smart enough to only reflect the changes or add the new components.</li>
+</ul>
+</li>
+<li><p>The architecture style provides a balance between exploration and exploitation.</p>
+<ul>
+<li>If we need something fast, we can reuse what we have built so far.</li>
+<li>If we need to experiment, it is easy to plug in new features to the application.</li>
+</ul>
+</li>
+</ul>
+<p>If you don’t have a plan for how your system will evolve, it won’t survive the test of time. Starting with the “Serverless Modular Monolith” gives you a solid and flexible foundation that supports growth and evolution for your systems.</p>
+<p>This blueprint has helped us at PostNL, and I hope it can serve as inspiration for you as well. If this architectural evolution is interesting for you, I encourage you to explore the concept “Evolutionary Architectures”.</p>
+<p>I hope you enjoyed this series and thank you for reading so far. This blog post series is also available as a presentation and if this is an interesting topic for you, please reach out to me from a platform of your choice. You can see possibilities from my <a href="/about/index.md">About</a> page.</p>
+<p>Happy coding and see you next time!</p>
+<h2 id="References"><a href="#References" class="headerlink" title="References"></a>References</h2><ul>
+<li><a target="_blank" rel="noopener" href="https://en.wikipedia.org/wiki/Anti-pattern">Anti-pattern: Big Ball of Mud</a></li>
+<li><a target="_blank" rel="noopener" href="https://pretius.com/blog/modular-software-architecture/">https://pretius.com/blog/modular-software-architecture/</a></li>
+<li><a target="_blank" rel="noopener" href="https://www.thoughtworks.com/en-us/insights/blog/microservices/modular-monolith-better-way-build-software">https://www.thoughtworks.com/en-us/insights/blog/microservices/modular-monolith-better-way-build-software</a></li>
+<li><a target="_blank" rel="noopener" href="https://medium.com/design-microservices-architecture-with-patterns/microservices-killer-modular-monolithic-architecture-ac83814f6862">https://medium.com/design-microservices-architecture-with-patterns/microservices-killer-modular-monolithic-architecture-ac83814f6862</a></li>
+<li><a target="_blank" rel="noopener" href="https://serverlessfirst.com/emails/why-monolithic-deployments-make-sense-for-small-serverless-teams/">https://serverlessfirst.com/emails/why-monolithic-deployments-make-sense-for-small-serverless-teams/</a></li>
+<li><a target="_blank" rel="noopener" href="https://www.postnl.nl/en/about-postnl/about-us/parcels/">PostNL facts and some numbers about parcel delivery</a></li>
+</ul>
+
+  </div>
+</article>
+
+    <div class="blog-post-comments">
+        <div id="disqus_thread">
+            <noscript>Please enable JavaScript to view the comments.</noscript>
+        </div>
+    </div>
+
+
+
+        
+          <div id="footer-post-container">
+  <div id="footer-post">
+
+    <div id="nav-footer" style="display: none">
+      <ul>
+        
+          <li><a href="/">Home</a></li>
+        
+          <li><a href="/about/">About</a></li>
+        
+          <li><a href="/archives/">Writing</a></li>
+        
+          <li><a target="_blank" rel="noopener" href="https://github.com/ssasoglu">Projects</a></li>
+        
+      </ul>
+    </div>
+
+    
+    
+      <div id="toc-footer" style="display: none">
+        <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#Serverless-Modular-Monolith"><span class="toc-number">1.</span> <span class="toc-text">Serverless Modular Monolith</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#Serverless-Modules"><span class="toc-number">1.1.</span> <span class="toc-text">Serverless Modules</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Distinction-between-Modules-and-Microservices"><span class="toc-number">1.2.</span> <span class="toc-text">Distinction between Modules and Microservices</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Practical-Benefits-in-Action"><span class="toc-number">1.3.</span> <span class="toc-text">Practical Benefits in Action</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#Version-migrations"><span class="toc-number">1.3.1.</span> <span class="toc-text">Version migrations</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#Side-cars"><span class="toc-number">1.3.2.</span> <span class="toc-text">Side-cars</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#A-B-Testing"><span class="toc-number">1.3.3.</span> <span class="toc-text">A-B Testing</span></a></li></ol></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Evolving-Towards-Microservices"><span class="toc-number">2.</span> <span class="toc-text">Evolving Towards Microservices</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Recap-and-Conclusions"><span class="toc-number">3.</span> <span class="toc-text">Recap and Conclusions</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#References"><span class="toc-number">4.</span> <span class="toc-text">References</span></a></li></ol>
+      </div>
+    
+
+    <div id="share-footer" style="display: none">
+      <ul>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.facebook.com/sharer.php?u=https://selcuksasoglu.com/2024/09/06/why-mm-is-great-for-serverless-pt-2/"><i class="fab fa-facebook fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://twitter.com/share?url=https://selcuksasoglu.com/2024/09/06/why-mm-is-great-for-serverless-pt-2/&text=Why Modular Monolith is a great starting architecture for a serverless application (Part 2)"><i class="fab fa-twitter fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.linkedin.com/shareArticle?url=https://selcuksasoglu.com/2024/09/06/why-mm-is-great-for-serverless-pt-2/&title=Why Modular Monolith is a great starting architecture for a serverless application (Part 2)"><i class="fab fa-linkedin fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://pinterest.com/pin/create/bookmarklet/?url=https://selcuksasoglu.com/2024/09/06/why-mm-is-great-for-serverless-pt-2/&is_video=false&description=Why Modular Monolith is a great starting architecture for a serverless application (Part 2)"><i class="fab fa-pinterest fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="mailto:?subject=Why Modular Monolith is a great starting architecture for a serverless application (Part 2)&body=Check out this article: https://selcuksasoglu.com/2024/09/06/why-mm-is-great-for-serverless-pt-2/"><i class="fa-solid fa-envelope fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://getpocket.com/save?url=https://selcuksasoglu.com/2024/09/06/why-mm-is-great-for-serverless-pt-2/&title=Why Modular Monolith is a great starting architecture for a serverless application (Part 2)"><i class="fab fa-get-pocket fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://reddit.com/submit?url=https://selcuksasoglu.com/2024/09/06/why-mm-is-great-for-serverless-pt-2/&title=Why Modular Monolith is a great starting architecture for a serverless application (Part 2)"><i class="fab fa-reddit fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.stumbleupon.com/submit?url=https://selcuksasoglu.com/2024/09/06/why-mm-is-great-for-serverless-pt-2/&title=Why Modular Monolith is a great starting architecture for a serverless application (Part 2)"><i class="fab fa-stumbleupon fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://digg.com/submit?url=https://selcuksasoglu.com/2024/09/06/why-mm-is-great-for-serverless-pt-2/&title=Why Modular Monolith is a great starting architecture for a serverless application (Part 2)"><i class="fab fa-digg fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.tumblr.com/share/link?url=https://selcuksasoglu.com/2024/09/06/why-mm-is-great-for-serverless-pt-2/&name=Why Modular Monolith is a great starting architecture for a serverless application (Part 2)&description="><i class="fab fa-tumblr fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://news.ycombinator.com/submitlink?u=https://selcuksasoglu.com/2024/09/06/why-mm-is-great-for-serverless-pt-2/&t=Why Modular Monolith is a great starting architecture for a serverless application (Part 2)"><i class="fab fa-hacker-news fa-lg" aria-hidden="true"></i></a></li>
+</ul>
+
+    </div>
+
+    <div id="actions-footer">
+        <a id="menu" class="icon" href="#" onclick="$('#nav-footer').toggle();return false;"><i class="fa-solid fa-bars fa-lg" aria-hidden="true"></i> Menu</a>
+        
+          <a id="toc" class="icon" href="#" onclick="$('#toc-footer').toggle();return false;"><i class="fa-solid fa-list fa-lg" aria-hidden="true"></i> TOC</a>
+        
+        <a id="share" class="icon" href="#" onclick="$('#share-footer').toggle();return false;"><i class="fa-solid fa-share-alt fa-lg" aria-hidden="true"></i> Share</a>
+        <a id="top" style="display:none" class="icon" href="#" onclick="$('html, body').animate({ scrollTop: 0 }, 'fast');"><i class="fa-solid fa-chevron-up fa-lg" aria-hidden="true"></i> Top</a>
+    </div>
+
+  </div>
+</div>
+
+        
+        <footer id="footer">
+  <div class="footer-left">
+    Copyright &copy;
+    
+    
+    2014-2024
+    Selcuk Sasoglu
+  </div>
+  <div class="footer-right">
+    <nav>
+      <ul>
+        <!--
+       --><li><a href="/">Home</a></li><!--
+     --><!--
+       --><li><a href="/about/">About</a></li><!--
+     --><!--
+       --><li><a href="/archives/">Writing</a></li><!--
+     --><!--
+       --><li><a target="_blank" rel="noopener" href="https://github.com/ssasoglu">Projects</a></li><!--
+     -->
+      </ul>
+    </nav>
+  </div>
+</footer>
+
+    </div>
+    <!-- styles -->
+
+
+
+  <link rel="preload" as="style" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" crossorigin="anonymous" onload="this.onload=null;this.rel='stylesheet'"/>
+
+
+    <!-- jquery -->
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js" crossorigin="anonymous"></script>
+
+
+
+
+<!-- clipboard -->
+
+  
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/clipboard.js/2.0.7/clipboard.min.js" crossorigin="anonymous"></script>
+  
+  <script type="text/javascript">
+  $(function() {
+    // copy-btn HTML
+    var btn = "<span class=\"btn-copy tooltipped tooltipped-sw\" aria-label=\"Copy to clipboard!\">";
+    btn += '<i class="fa-regular fa-clone"></i>';
+    btn += '</span>';
+    // mount it!
+    $(".highlight table").before(btn);
+    var clip = new ClipboardJS('.btn-copy', {
+      text: function(trigger) {
+        return Array.from(trigger.nextElementSibling.querySelectorAll('.code')).reduce((str,it)=>str+it.innerText+'\n','')
+      }
+    });
+    clip.on('success', function(e) {
+      e.trigger.setAttribute('aria-label', "Copied!");
+      e.clearSelection();
+    })
+  })
+  </script>
+
+
+<script src="/js/main.js"></script>
+
+<!-- search -->
+
+<!-- Baidu Analytics -->
+
+<!-- Cloudflare Analytics -->
+
+  <script defer src='https://static.cloudflareinsights.com/beacon.min.js' data-cf-beacon='{"token": "9112ad25ff1c47ba8fa90bea13ceeff2"}'></script>
+
+<!-- Disqus Comments -->
+
+    <script type="text/javascript">
+        var disqus_shortname = 'selcuksasoglu';
+
+        (function(){
+            var dsq = document.createElement('script');
+            dsq.type = 'text/javascript';
+            dsq.async = true;
+            dsq.src = '//' + disqus_shortname + '.disqus.com/embed.js';
+            (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+        }());
+    </script>
+
+<!-- utterances Comments -->
+
+</body>
+</html>
