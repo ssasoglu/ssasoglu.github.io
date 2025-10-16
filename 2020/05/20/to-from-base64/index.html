@@ -6,12 +6,12 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="HandheldFriendly" content="True">
     <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=5" />
-    <meta name="description" content="Base64 encode file in terminal: 1base64 -i &lt;in-file&gt; -o &lt;outfile&gt;  Base64 encode input string in terminal: 12# -n prevents adding line feed to the end of the stringecho -n &amp;#x27;input stri">
+    <meta name="description" content="Base64 encode file in terminal: 1base64 -i &lt;in-file&gt; -o &lt;outfile&gt;  Base64 encode input string in terminal: 12# -n prevents adding line feed to the end of the stringecho -n &#x27;input stri">
 <meta property="og:type" content="article">
 <meta property="og:title" content="TIL: To&#x2F;From Base64">
 <meta property="og:url" content="https://selcuksasoglu.com/2020/05/20/to-from-base64/index.html">
 <meta property="og:site_name" content="Selcuk Sasoglu">
-<meta property="og:description" content="Base64 encode file in terminal: 1base64 -i &lt;in-file&gt; -o &lt;outfile&gt;  Base64 encode input string in terminal: 12# -n prevents adding line feed to the end of the stringecho -n &amp;#x27;input stri">
+<meta property="og:description" content="Base64 encode file in terminal: 1base64 -i &lt;in-file&gt; -o &lt;outfile&gt;  Base64 encode input string in terminal: 12# -n prevents adding line feed to the end of the stringecho -n &#x27;input stri">
 <meta property="og:locale" content="en_US">
 <meta property="article:published_time" content="2020-05-20T19:49:43.000Z">
 <meta property="article:modified_time" content="2024-04-02T10:44:52.172Z">
@@ -65,7 +65,7 @@
     
 	<!-- mathjax -->
 	
-<meta name="generator" content="Hexo 6.0.0"></head>
+<meta name="generator" content="Hexo 7.3.0"></head>
 
 <body class="max-width mx-auto px3 ltr">
     
@@ -78,6 +78,8 @@
       <ul>
         <!--
        --><li><a href="/">Home</a></li><!--
+     --><!--
+       --><li><a href="/speaking/">Speaking</a></li><!--
      --><!--
        --><li><a href="/about/">About</a></li><!--
      --><!--
@@ -166,13 +168,13 @@
 
   <div class="content e-content" itemprop="articleBody">
     <p>Base64 encode file in terminal:</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">base64 -i &lt;in-file&gt; -o &lt;outfile&gt;</span><br></pre></td></tr></table></figure>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">base64</span> -i &lt;in-file&gt; -o &lt;outfile&gt;</span><br></pre></td></tr></table></figure>
 
 <p>Base64 encode input string in terminal:</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># -n prevents adding line feed to the end of the string</span></span><br><span class="line"><span class="built_in">echo</span> -n <span class="string">&#x27;input string&#x27;</span> | base64</span><br></pre></td></tr></table></figure>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># -n prevents adding line feed to the end of the string</span></span><br><span class="line"><span class="built_in">echo</span> -n <span class="string">&#x27;input string&#x27;</span> | <span class="built_in">base64</span></span><br></pre></td></tr></table></figure>
 
 <p>Decode base64 string:</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># -n prevents adding line feed to the end of the string</span></span><br><span class="line"><span class="built_in">echo</span> -n <span class="string">&#x27;InputBase64String&#x27;</span> | base64 --decode</span><br></pre></td></tr></table></figure>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># -n prevents adding line feed to the end of the string</span></span><br><span class="line"><span class="built_in">echo</span> -n <span class="string">&#x27;InputBase64String&#x27;</span> | <span class="built_in">base64</span> --decode</span><br></pre></td></tr></table></figure>
 
 <p><a href="../../19/til/">&lt;- Back to all TILs</a></p>
 
@@ -195,6 +197,8 @@
       <ul>
         
           <li><a href="/">Home</a></li>
+        
+          <li><a href="/speaking/">Speaking</a></li>
         
           <li><a href="/about/">About</a></li>
         
@@ -249,6 +253,8 @@
       <ul>
         <!--
        --><li><a href="/">Home</a></li><!--
+     --><!--
+       --><li><a href="/speaking/">Speaking</a></li><!--
      --><!--
        --><li><a href="/about/">About</a></li><!--
      --><!--

@@ -1,0 +1,456 @@
+<!DOCTYPE html>
+<html lang=en>
+<head>
+    <!-- so meta -->
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="HandheldFriendly" content="True">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=5" />
+    <meta name="description" content="Even if you are not aware, you are using feedback loops to build software every day. Your team’s performance is actually highly correlated with how you utilize these feedback loops. During a recent d">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Feedback Loops in the Age of AI and Cloud Development">
+<meta property="og:url" content="https://selcuksasoglu.com/2025/10/01/feedback-loops/index.html">
+<meta property="og:site_name" content="Selcuk Sasoglu">
+<meta property="og:description" content="Even if you are not aware, you are using feedback loops to build software every day. Your team’s performance is actually highly correlated with how you utilize these feedback loops. During a recent d">
+<meta property="og:locale" content="en_US">
+<meta property="og:image" content="https://selcuksasoglu.com/images/posts/2025/roller-coaster.jpg">
+<meta property="og:image" content="https://selcuksasoglu.com/images/posts/2025/cost-of-fixing-defects.png">
+<meta property="og:image" content="https://selcuksasoglu.com/images/posts/2025/exponential-cost-of-fixing-defects.png">
+<meta property="og:image" content="https://selcuksasoglu.com/images/posts/2025/devops-infinity-white-orange.png">
+<meta property="og:image" content="https://selcuksasoglu.com/images/posts/2025/code-build-test-release-loop.png">
+<meta property="og:image" content="https://selcuksasoglu.com/images/posts/2025/pdca.png">
+<meta property="og:image" content="https://selcuksasoglu.com/images/posts/2025/survey.jpg">
+<meta property="og:image" content="https://selcuksasoglu.com/images/posts/2025/team-progress.jpg">
+<meta property="article:published_time" content="2025-10-01T08:24:40.000Z">
+<meta property="article:modified_time" content="2025-10-16T09:32:21.375Z">
+<meta property="article:author" content="Selcuk Sasoglu">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://selcuksasoglu.com/images/posts/2025/roller-coaster.jpg">
+    
+    
+      
+        
+          <link rel="shortcut icon" href="/images/favicon.ico">
+        
+      
+      
+        
+          <link rel="icon" type="image/png" href="/images/favicon-192x192.png" sizes="192x192">
+        
+      
+      
+        
+          <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon.png">
+        
+      
+    
+    <!-- title -->
+    <title>Feedback Loops in the Age of AI and Cloud Development</title>
+    <!-- async scripts -->
+    <!-- Google Analytics -->
+
+
+    <!-- Umami Analytics -->
+
+    <script async defer
+            data-website-id="413684e0-0618-4773-b9c3-309f4740f242"
+            src="https://cloud.umami.is/script.js">
+    </script>
+
+
+    <!-- styles -->
+    
+<link rel="stylesheet" href="/css/style.css">
+
+    <!-- persian styles -->
+    
+    <!-- rss -->
+    
+    
+	<!-- mathjax -->
+	
+<meta name="generator" content="Hexo 7.3.0"></head>
+
+<body class="max-width mx-auto px3 ltr">
+    
+      <div id="header-post">
+  <a id="menu-icon" href="#" aria-label="Menu"><i class="fa-solid fa-bars fa-lg"></i></a>
+  <a id="menu-icon-tablet" href="#" aria-label="Menu"><i class="fa-solid fa-bars fa-lg"></i></a>
+  <a id="top-icon-tablet" href="#" aria-label="Top" onclick="$('html, body').animate({ scrollTop: 0 }, 'fast');" style="display:none;"><i class="fa-solid fa-chevron-up fa-lg"></i></a>
+  <span id="menu">
+    <span id="nav">
+      <ul>
+        <!--
+       --><li><a href="/">Home</a></li><!--
+     --><!--
+       --><li><a href="/speaking/">Speaking</a></li><!--
+     --><!--
+       --><li><a href="/about/">About</a></li><!--
+     --><!--
+       --><li><a href="/archives/">Writing</a></li><!--
+     --><!--
+       --><li><a target="_blank" rel="noopener" href="https://github.com/ssasoglu">Projects</a></li><!--
+     -->
+      </ul>
+    </span>
+    <br/>
+    <span id="actions">
+      <ul>
+        
+        
+        <li><a class="icon" aria-label="Next post" href="/2025/03/14/predictions-for-generative-ai/"><i class="fa-solid fa-chevron-right" aria-hidden="true" onmouseover="$('#i-next').toggle();" onmouseout="$('#i-next').toggle();"></i></a></li>
+        
+        <li><a class="icon" aria-label="Back to top" href="#" onclick="$('html, body').animate({ scrollTop: 0 }, 'fast');"><i class="fa-solid fa-chevron-up" aria-hidden="true" onmouseover="$('#i-top').toggle();" onmouseout="$('#i-top').toggle();"></i></a></li>
+        <li><a class="icon" aria-label="Share post" href="#"><i class="fa-solid fa-share-alt" aria-hidden="true" onmouseover="$('#i-share').toggle();" onmouseout="$('#i-share').toggle();" onclick="$('#share').toggle();return false;"></i></a></li>
+      </ul>
+      <span id="i-prev" class="info" style="display:none;">Previous post</span>
+      <span id="i-next" class="info" style="display:none;">Next post</span>
+      <span id="i-top" class="info" style="display:none;">Back to top</span>
+      <span id="i-share" class="info" style="display:none;">Share post</span>
+    </span>
+    <br/>
+    <div id="share" style="display: none">
+      <ul>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.facebook.com/sharer.php?u=https://selcuksasoglu.com/2025/10/01/feedback-loops/"><i class="fab fa-facebook " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://twitter.com/share?url=https://selcuksasoglu.com/2025/10/01/feedback-loops/&text=Feedback Loops in the Age of AI and Cloud Development"><i class="fab fa-twitter " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.linkedin.com/shareArticle?url=https://selcuksasoglu.com/2025/10/01/feedback-loops/&title=Feedback Loops in the Age of AI and Cloud Development"><i class="fab fa-linkedin " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://pinterest.com/pin/create/bookmarklet/?url=https://selcuksasoglu.com/2025/10/01/feedback-loops/&is_video=false&description=Feedback Loops in the Age of AI and Cloud Development"><i class="fab fa-pinterest " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="mailto:?subject=Feedback Loops in the Age of AI and Cloud Development&body=Check out this article: https://selcuksasoglu.com/2025/10/01/feedback-loops/"><i class="fa-solid fa-envelope " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://getpocket.com/save?url=https://selcuksasoglu.com/2025/10/01/feedback-loops/&title=Feedback Loops in the Age of AI and Cloud Development"><i class="fab fa-get-pocket " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://reddit.com/submit?url=https://selcuksasoglu.com/2025/10/01/feedback-loops/&title=Feedback Loops in the Age of AI and Cloud Development"><i class="fab fa-reddit " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.stumbleupon.com/submit?url=https://selcuksasoglu.com/2025/10/01/feedback-loops/&title=Feedback Loops in the Age of AI and Cloud Development"><i class="fab fa-stumbleupon " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://digg.com/submit?url=https://selcuksasoglu.com/2025/10/01/feedback-loops/&title=Feedback Loops in the Age of AI and Cloud Development"><i class="fab fa-digg " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.tumblr.com/share/link?url=https://selcuksasoglu.com/2025/10/01/feedback-loops/&name=Feedback Loops in the Age of AI and Cloud Development&description="><i class="fab fa-tumblr " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://news.ycombinator.com/submitlink?u=https://selcuksasoglu.com/2025/10/01/feedback-loops/&t=Feedback Loops in the Age of AI and Cloud Development"><i class="fab fa-hacker-news " aria-hidden="true"></i></a></li>
+</ul>
+
+    </div>
+    
+    
+      <div id="toc">
+        <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#Cost-of-fixing-defects"><span class="toc-number">1.</span> <span class="toc-text">Cost of fixing defects</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Real-world-examples-from-a-recent-project"><span class="toc-number">2.</span> <span class="toc-text">Real world examples from a recent project</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Where-should-you-start"><span class="toc-number">3.</span> <span class="toc-text">Where should you start?</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#DevOps-Infinity-Cycle"><span class="toc-number">4.</span> <span class="toc-text">DevOps Infinity Cycle</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#Plan"><span class="toc-number">4.1.</span> <span class="toc-text">Plan</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#AWS"><span class="toc-number">4.1.1.</span> <span class="toc-text">AWS</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#Generative-AI"><span class="toc-number">4.1.2.</span> <span class="toc-text">Generative-AI</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Code"><span class="toc-number">4.2.</span> <span class="toc-text">Code</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#AWS-1"><span class="toc-number">4.2.1.</span> <span class="toc-text">AWS</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#Generative-AI-1"><span class="toc-number">4.2.2.</span> <span class="toc-text">Generative-AI</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Build"><span class="toc-number">4.3.</span> <span class="toc-text">Build</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Test"><span class="toc-number">4.4.</span> <span class="toc-text">Test</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#AWS-2"><span class="toc-number">4.4.1.</span> <span class="toc-text">AWS</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#Generative-AI-2"><span class="toc-number">4.4.2.</span> <span class="toc-text">Generative-AI</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Release"><span class="toc-number">4.5.</span> <span class="toc-text">Release</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Deploy"><span class="toc-number">4.6.</span> <span class="toc-text">Deploy</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Operate"><span class="toc-number">4.7.</span> <span class="toc-text">Operate</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#Generative-AI-3"><span class="toc-number">4.7.1.</span> <span class="toc-text">Generative-AI</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Monitor"><span class="toc-number">4.8.</span> <span class="toc-text">Monitor</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Feedback-Loops-for-your-Team"><span class="toc-number">5.</span> <span class="toc-text">Feedback Loops for your Team</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Feedback-Loops-for-your-Organization"><span class="toc-number">6.</span> <span class="toc-text">Feedback Loops for your Organization</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Conclusion"><span class="toc-number">7.</span> <span class="toc-text">Conclusion</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#References"><span class="toc-number">8.</span> <span class="toc-text">References</span></a></li></ol>
+      </div>
+    
+  </span>
+</div>
+
+    
+    <div class="content index py4 ">
+        
+        <article class="post h-entry" itemscope itemtype="http://schema.org/BlogPosting">
+  <header>
+    
+    <h1 class="posttitle p-name" itemprop="name headline">
+        Feedback Loops in the Age of AI and Cloud Development
+    </h1>
+
+
+
+    <div class="meta">
+      <span class="author p-author h-card" itemprop="author" itemscope itemtype="http://schema.org/Person">
+        <span class="p-name" itemprop="name">Selcuk Sasoglu</span>
+      </span>
+      
+    <div class="postdate">
+      
+        <time datetime="2025-10-01T08:24:40.000Z" class="dt-published" itemprop="datePublished">2025-10-01</time>
+        
+      
+    </div>
+
+
+      
+
+      
+
+    </div>
+  </header>
+  
+
+  <div class="content e-content" itemprop="articleBody">
+    <p><img src="/images/posts/2025/roller-coaster.jpg" alt="loop"></p>
+<p>Even if you are not aware, you are using feedback loops to build software every day. Your team’s performance is actually highly correlated with how you utilize these feedback loops. During a recent development project, I once more saw firsthand how crucial feedback loops are in software development. In this blog post, I would also like to remind you of how important they are.</p>
+<p>Every project has its own difficulties, and every team can make mistakes. This is normal in software development.  What differentiates high-performing teams from the others generally boils down to what they do with the feedback they get. The feedback could be a failing test case from the pipeline, a monitoring alarm going off on production, or a sneaky bug that managed to pass all existing quality gates and made its way to production.</p>
+<blockquote>
+<p>Sneaky bugs require a post-mortem, an analysis to understand how all quality gates were bypassed. The questions that need to be asked here are “What is the possibility of this ever happening again?” and, if it is probable, “What can we do to prevent it ever happening again?</p>
+</blockquote>
+<h2 id="Cost-of-fixing-defects"><a href="#Cost-of-fixing-defects" class="headerlink" title="Cost of fixing defects"></a>Cost of fixing defects</h2><p>Before anything else, I would like to show you this research from IBM, <a target="_blank" rel="noopener" href="https://www.researchgate.net/publication/255965523_Integrating_Software_Assurance_into_the_Software_Development_Life_Cycle_SDLC">Integrating Software Assurance into the Software Development Life Cycle (SDLC)</a>. As you can see from the graphic below, noticing a design flaw in the earlier stages of development can be 100x cheaper than noticing it on production. If you notice it during implementation, it is 13x cheaper.</p>
+<p><img src="/images/posts/2025/cost-of-fixing-defects.png" alt="cost-of-fixing-defects"></p>
+<p>I want you to analyze this graph as if you are investing money, time, and resources; “Think like an investor” here.</p>
+<p><img src="/images/posts/2025/exponential-cost-of-fixing-defects.png" alt="pay-off-exponential-cost-of-fixing-defects"></p>
+<p>If you can create a feedback loop that will find a bug, detect a design flaw or similar in the earlier stages of development, you can actually get an exponential payoff.</p>
+<h2 id="Real-world-examples-from-a-recent-project"><a href="#Real-world-examples-from-a-recent-project" class="headerlink" title="Real world examples from a recent project"></a>Real world examples from a recent project</h2><p>With a group of highly skilled and experienced engineers, we worked on a high-pressure, hard-deadline project that would allow significant cost savings for our company. Since we had a hard deadline, time became a constant for us in the <a target="_blank" rel="noopener" href="https://en.wikipedia.org/wiki/Project_management_triangle">Iron Triangle</a>, which also made time scarce for us. We had to make sure that every effort and every moment we spent mattered for the end result. We constantly balanced scope and quality to meet the deadline.</p>
+<p>What I noticed during this period was the effectiveness of developer tools. Small investments we made in developer tools, created feedback loops which paid off so quickly that the time poured into these small developer tools became insignificant even under the high-pressure deadline.</p>
+<p>Our configuration-heavy project had a few manual steps (copy&#x2F;paste) to configure environments. Required time to completely automate this process was ~10000x more expensive than keeping it manual. However, an hour invested in comparing the configurations per environment in the CI&#x2F;CD pipeline saved hours of work compared to the moment we realized that we actually deployed wrong configuration to production.</p>
+<p>Another important advantage of working with experienced engineers was that most common feedback loops immediately found their place in our SDLC (Software Development Lifecycle). There have been many cases of active discussions to add more quality gates that will give us feedback earlier to notice problems before they occur on production. What are these common feedback loops? Where should you start? Are there specific tools that can help you create these feedback loops? Can you or should you take additional actions if you are working on AWS, using Generative-AI? Let’s discuss these questions in the following sections.</p>
+<h2 id="Where-should-you-start"><a href="#Where-should-you-start" class="headerlink" title="Where should you start?"></a>Where should you start?</h2><p>DevOps Infinity Cycle must be the starting point when working on feedback loops in your SDLC (Software Development Lifecycle). In the era of AI and cloud development, we have more tools to build on this construct. In the following sections let’s discuss <strong>some possibilities.</strong></p>
+<p><img src="/images/posts/2025/devops-infinity-white-orange.png" alt="devops-infinity-cycle"></p>
+<p>Let’s go over the DevOps Infinity Cycle stages together and discuss one by one what could be good options.</p>
+<h2 id="DevOps-Infinity-Cycle"><a href="#DevOps-Infinity-Cycle" class="headerlink" title="DevOps Infinity Cycle"></a>DevOps Infinity Cycle</h2><hr>
+<h3 id="Plan"><a href="#Plan" class="headerlink" title="Plan"></a>Plan</h3><p>Everything starts with a good plan. If you check the <a href="#cost-of-fixing-defects">Cost of fixing defects</a> section, any bug, design flaw that we can notice in the Plan phase can be 100x cheaper to fix.</p>
+<p>At this phase, it is imperative that you understand the domain and question Why&#x2F;What&#x2F;How clearly about the project. There are many possible approaches here. One I like to use is <a target="_blank" rel="noopener" href="https://citoolkit.com/articles/5w1h/">5W1H</a> approach. 5W1H is a problem-solving approach that helps in obtaining fundamental information about a given problem or situation. This type of checklist is designed to guide the gathering of information and understanding of any current state using six key words: What&#x2F;Who&#x2F;Where&#x2F;When&#x2F;Why&#x2F;How.</p>
+<p>You should ask questions like:</p>
+<ul>
+<li>What is the problem statement?</li>
+<li>Why are you building this particular project or feature? Is it a good investment?</li>
+<li>Who will be the main audience?</li>
+<li>How should you solve this problem? What kind of solution would strike the balance between cost and value generation?</li>
+</ul>
+<p>When the answers to above questions are clear, next step is to also have a <em>Testing Strategy</em>. Determine how you will validate your assumptions and solution.</p>
+<h4 id="AWS"><a href="#AWS" class="headerlink" title="AWS"></a><strong>AWS</strong></h4><p>You should check your assumptions against <a target="_blank" rel="noopener" href="https://docs.aws.amazon.com/wellarchitected/latest/framework/welcome.html">AWS Well Architected Framework</a> if you are building on AWS. Do your assumptions still hold or should you go back to the drawing board?</p>
+<h4 id="Generative-AI"><a href="#Generative-AI" class="headerlink" title="Generative-AI"></a><strong>Generative-AI</strong></h4><p>Use Generative AI for documentation, note taking in meetings, summaries of your decisions, gap analysis or to create ADRs.<br>Create your own <a target="_blank" rel="noopener" href="https://www.selcuksasoglu.com/2025/03/14/predictions-for-generative-ai/">context.</a></p>
+<p>Did you know that according to DORA Report 2023, quality of internal documentation has an almost 13-fold impact on organizational performance? Guess who is good at writing documentation? Yes, Generative-AI can do that for you once you give the correct template to it.</p>
+<hr>
+<p><strong>Code</strong>, <strong>Build</strong> and <strong>Test</strong> phases will form a feedback loop by themselves and these phases will be the ones that you will be looping over and over again at the beginning of a project. This loop here should execute like a powerful engine.</p>
+<p><img src="/images/posts/2025/code-build-test-release-loop.png" alt="loop"></p>
+<p>Try to make investments here to make this loop as seamless as possible! This is the place where your investments can really matter.</p>
+<hr>
+<h3 id="Code"><a href="#Code" class="headerlink" title="Code"></a>Code</h3><p>Coding phase must be intertwined with automated testing. Automated testing creates fantastic feedback loops for us. We should use it to its full extend. Testable code has also high correlation with maintainable code. We should start with automated testing together with development.</p>
+<p>There are also other tools here that can create valuable feedback loops for us. Let’s name a few.</p>
+<p>Use a Static Code Analysis (for example: SonarCloud) during development. Simple stuff that you can miss in code reviews can be caught by this tool. It also helps you track your code coverage with tests. Use this as a feedback loop to improve your tests. Have thresholds.</p>
+<p>You can already integrate observability (o11y) when you start development and trust me, it will make a huge difference in your development especially with code bases that have complex computations and interactions. We will touch on this again in <strong>Test</strong> phase.</p>
+<p>Enforce mandatory <em>Code Reviews</em>, use AI where you can. Code Reviews can create bottlenecks in DevOps Team, but they are great for both as a quality gate and also collaboration moment within the team. AI code reviewers can help you with Code Reviews and create a faster feedback loop.</p>
+<p>Invest in developer tools. As my example in <em>Real world examples from a recent project</em>, one hour of investment in a developer tool can save hundreds of hours. If you can prevent an error before a production deployment, your investment has already paid for itself. Or a production error can be a trigger to create a developer tool to prevent it ever happening again.</p>
+<blockquote>
+<p>Think like an investor.</p>
+</blockquote>
+<h4 id="AWS-1"><a href="#AWS-1" class="headerlink" title="AWS"></a><strong>AWS</strong></h4><p>Check <a target="_blank" rel="noopener" href="https://www.localstack.cloud/">LocalStack</a> and see if it can help you build some functionality faster. We will touch on this again in <strong>Test</strong> phase.</p>
+<h4 id="Generative-AI-1"><a href="#Generative-AI-1" class="headerlink" title="Generative-AI"></a><strong>Generative-AI</strong></h4><p>Use an AI assistant to help you with coding and Code Reviews. Push it to its limits to find bugs as early as possible.</p>
+<hr>
+<h3 id="Build"><a href="#Build" class="headerlink" title="Build"></a>Build</h3><p>I hope I don’t need to write in detail to use a CI&#x2F;CD pipeline to automate tasks for build&#x2F;test&#x2F;publish&#x2F;deployment anymore. Hopefully you are already doing it.</p>
+<p>What I can tell instead is to keep an eye on your pipeline runs and optimize them. You should set thresholds for how much time each step is supposed to take and take vigorous action if your thresholds are breached.</p>
+<p>Integrate and scan for security at early stages. Heed to what Dependabot says about your package vulnerabilities. Adhere to best practices against supply chain attacks depending on your programming language.</p>
+<hr>
+<h3 id="Test"><a href="#Test" class="headerlink" title="Test"></a>Test</h3><p>If you have already did your homework in <strong>Plan</strong> phase, you should already have a <em>Testing Strategy</em>. Create your <em>Testing Plan</em> in detail according to your <em>Testing Strategy</em>. You should layer your tests in such a way that crucial functionality is covered at least in one layer and overlap between testing layers (unit&#x2F;integration&#x2F;end-to-end) is as small as possible for efficiency.</p>
+<p>Since we already have pipeline, we should also keep an eye on testing duration and optimize when necessary.</p>
+<h4 id="AWS-2"><a href="#AWS-2" class="headerlink" title="AWS"></a><strong>AWS</strong></h4><p>There will be parts in the codebase where you can test locally and there will be parts you can’t unless you make a deployment.<br>Here, it is crucial to make a good decision on what you can test locally. Because local testing will be faster, cheaper and ~13 times more efficient. It will give you a faster feedback loop on what doesn’t work. Maybe a code structure change just to be able to test locally is not a bad investment?</p>
+<p>Guess what? O11y integration helps with testing as well. If you run a local Jaeger container and point your codebase to it, you can collect <em>OpenTelemetry Events</em> directly from your tests. This approach actually makes a huge difference in pinpointing bugs and understanding the behavior of your codebase with low cognitive overload. Switching to another <em>OpenTelemetry Backend</em> is just a configuration change when deployed to the cloud.</p>
+<h4 id="Generative-AI-2"><a href="#Generative-AI-2" class="headerlink" title="Generative-AI"></a><strong>Generative-AI</strong></h4><p>You probably already know but Generative-AI is pretty good at writing tests once you establish standards. You can leverage this capability and increase your test coverage significantly.</p>
+<p>Testing is one of the most powerful feedback loops that we have. We should use it to its full extend.</p>
+<hr>
+<h3 id="Release"><a href="#Release" class="headerlink" title="Release"></a>Release</h3><p>During this phase, the most important thing you should do is to generate release notes and use semantic versioning so that you can refer back to the changes in the future.<br>The quality of the phases after this one will rely on versioning created in this phase.</p>
+<hr>
+<h3 id="Deploy"><a href="#Deploy" class="headerlink" title="Deploy"></a>Deploy</h3><p>In deployment phase, it is imperative to deploy using a CI&#x2F;CD pipeline. This automated process will allow you to:</p>
+<ul>
+<li>Keep an eye on how long does it take to deploy a new version.</li>
+<li>Collect other metrics on your deployments (i.e. DORA Metrics).</li>
+</ul>
+<p>DORA Metrics are core to any DevOps team. Additionally, I personally like to track the duration of the deployments and use it as a feedback loop to optimize the deployment process.</p>
+<hr>
+<h3 id="Operate"><a href="#Operate" class="headerlink" title="Operate"></a>Operate</h3><p>Before we get to the Operate phase, we should have a proper incident management process to support our users.<br>We should also gather data about the usage of our application. This data can be used to feed back to the earlier stages of DevOps Infinity Cycle.<br>We should also add alerts to business metrics.</p>
+<h4 id="Generative-AI-3"><a href="#Generative-AI-3" class="headerlink" title="Generative-AI"></a><strong>Generative-AI</strong></h4><p>Generative-AI can be used to pinpoint root causes of problems faster during incident management. Leverage this capability to create a feedback loop for your incident management process.</p>
+<hr>
+<h3 id="Monitor"><a href="#Monitor" class="headerlink" title="Monitor"></a>Monitor</h3><p>For monitoring, health metrics for all your critical resources are crucial.<br>If you have been integrating o11y (Observability) during development, you should now have a good understanding of your applications behavior during normal and faulty operation. This will help significantly for incident management as well.</p>
+<hr>
+<p>Now that we have covered all phases of the DevOps Infinity Cycle, let’s discuss how we can create feedback loops for our team and organization. The feedback loops we create within DevOps Infinity Cycle will help us during software development. Feedback loops we create on top of them in “Team Level” and “Organization Level” will help us to improve the engineering excellence to the next level.</p>
+<h2 id="Feedback-Loops-for-your-Team"><a href="#Feedback-Loops-for-your-Team" class="headerlink" title="Feedback Loops for your Team"></a>Feedback Loops for your Team</h2><p>DevOps Teams must also invest in creating a <a target="_blank" rel="noopener" href="https://en.wikipedia.org/wiki/PDCA">PDCA (Plan-Do-Check-Act) cycle</a> to improve the engineering excellence through continuous improvement.</p>
+<p><img src="/images/posts/2025/pdca.png" alt="pdca-cycle"></p>
+<p>Retrospective meetings are the great to utilize for this activity. I know, you find them boring and you don’t want to talk about how you feel in front of your team members. I believe the way to decrease friction is to talk through numbers.</p>
+<p>Use retrospective meetings effectively:</p>
+<ul>
+<li>Have a self assessment on team happiness and overall team performance.</li>
+<li>Go over your DORA metrics to detect fluctuations and assign tasks to do root cause analysis.</li>
+<li>Determine quality gates and make it a standard.</li>
+</ul>
+<p>In my teams, I created a 5 statement anonymous survey to get feedback from the team at the end of every sprint. This allows us to assign numbers to the general feeling of the team and opens the door for more detailed feedback and discussions during the retrospective meeting.</p>
+<p><img src="/images/posts/2025/survey.jpg" alt="survey"></p>
+<p>What matters is the progress and visualizing the progress. Through Kaizen (small iterative improvements), this approach creates a feedback loop on team level and you can take action if you notice problems. A detected problem can be a trigger for a new quality gate and can become a new standard in the <a target="_blank" rel="noopener" href="https://en.wikipedia.org/wiki/PDCA">PDCA (Plan-Do-Check-Act) cycle</a>.</p>
+<p><img src="/images/posts/2025/team-progress.jpg" alt="team-progress"></p>
+<h2 id="Feedback-Loops-for-your-Organization"><a href="#Feedback-Loops-for-your-Organization" class="headerlink" title="Feedback Loops for your Organization"></a>Feedback Loops for your Organization</h2><p>Organizations also need a feedback loop to improve their decision making. In my experience, organizations who are working with engineering teams must also collect DORA Metrics per team.</p>
+<p>We have many strategic decisions and from upper management it is extremely difficult to notice the effects of these decisions.</p>
+<p>Beauty of DORA metrics are that they are universal. It doesn’t matter what kind of application you are building. If all teams were to share their performance metrics on organizational level, the organization would also have its own metrics.</p>
+<p>We already know that the shared data must not be used to compare teams. The teams are operating in different contexts. It would be comparing apples with oranges which doesn’t make any sense. But if say, all teams were reporting their DORA metrics and we simply observe the trends of these metrics, it would allow possibility to:</p>
+<ul>
+<li>Visualize the performance of an individual team over a timeline.<ul>
+<li>This will allow you to self-reflect on your team’s performance.</li>
+<li>Let the upper management to see the performance and decide better on where to invest in your team.</li>
+</ul>
+</li>
+<li>Create formulas on organizational level to visualize and reflect on upper management decisions looking at the overall context of all teams.</li>
+</ul>
+<h2 id="Conclusion"><a href="#Conclusion" class="headerlink" title="Conclusion"></a>Conclusion</h2><p>I started this article showing you the cost of fixing defects in different stages of the development lifecycle. Then I gave you a real world example of how feedback loops can help you save your time and resources. We went over the DevOps Infinity Cycle and discussed how you can create feedback loops for your team and organization. To highlight the most important points:</p>
+<ul>
+<li>Spend just enough time on planning, not too little, not too much. Try to find the sweet spot.</li>
+<li>Focus on feedback loops where you iterate the most (Code&#x2F;Build&#x2F;Test). Any defect detected in these phases can be fixed quickly and with low cost.</li>
+<li>“Think like an investor”. If you can create a feedback loop that will find a bug, detect a design flaw or similar in the earlier stages of development, you can actually get an exponential payoff.</li>
+<li>Set thresholds for testing, deployments, and other metrics (DORA Metrics) and go after optimizations vigorously if thresholds are breached.</li>
+<li>Create a PDCA cycle for your team. This will help you to improve the engineering excellence through continuous improvement.</li>
+<li>Help your organization create feedback loops. Allow them to reflect on their decisions and make better investments.</li>
+</ul>
+<p>During this journey we added additional actions you can take if you are working on AWS, and if your team is using Generative-AI.</p>
+<p>I hope you enjoyed reading this article. If I managed to remind you the importance of feedback loops and spark a few ideas on how you can create a few for your team and organization, then my target is achieved. Thank you for reading.</p>
+<p>Happy coding!</p>
+<h2 id="References"><a href="#References" class="headerlink" title="References"></a>References</h2><ul>
+<li><a target="_blank" rel="noopener" href="https://www.researchgate.net/publication/255965523_Integrating_Software_Assurance_into_the_Software_Development_Life_Cycle_SDLC">Integrating Software Assurance into the Software Development Life Cycle (SDLC)</a></li>
+<li><a target="_blank" rel="noopener" href="https://www.devops-research.com/research.html">DORA Report 2023</a></li>
+<li><a target="_blank" rel="noopener" href="https://citoolkit.com/articles/5w1h/">5W1H</a></li>
+<li><a target="_blank" rel="noopener" href="https://www.devops-research.com/infinity-cycle.html">DevOps Infinity Cycle</a></li>
+<li><a target="_blank" rel="noopener" href="https://en.wikipedia.org/wiki/PDCA">PDCA</a></li>
+<li><a target="_blank" rel="noopener" href="https://opentelemetry.io/">OpenTelemetry</a></li>
+<li><a target="_blank" rel="noopener" href="https://www.splunk.com/en_us/what-is-observability.html">Observability</a></li>
+</ul>
+
+  </div>
+</article>
+
+    <div class="blog-post-comments">
+        <div id="disqus_thread">
+            <noscript>Please enable JavaScript to view the comments.</noscript>
+        </div>
+    </div>
+
+
+
+        
+          <div id="footer-post-container">
+  <div id="footer-post">
+
+    <div id="nav-footer" style="display: none">
+      <ul>
+        
+          <li><a href="/">Home</a></li>
+        
+          <li><a href="/speaking/">Speaking</a></li>
+        
+          <li><a href="/about/">About</a></li>
+        
+          <li><a href="/archives/">Writing</a></li>
+        
+          <li><a target="_blank" rel="noopener" href="https://github.com/ssasoglu">Projects</a></li>
+        
+      </ul>
+    </div>
+
+    
+    
+      <div id="toc-footer" style="display: none">
+        <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#Cost-of-fixing-defects"><span class="toc-number">1.</span> <span class="toc-text">Cost of fixing defects</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Real-world-examples-from-a-recent-project"><span class="toc-number">2.</span> <span class="toc-text">Real world examples from a recent project</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Where-should-you-start"><span class="toc-number">3.</span> <span class="toc-text">Where should you start?</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#DevOps-Infinity-Cycle"><span class="toc-number">4.</span> <span class="toc-text">DevOps Infinity Cycle</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#Plan"><span class="toc-number">4.1.</span> <span class="toc-text">Plan</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#AWS"><span class="toc-number">4.1.1.</span> <span class="toc-text">AWS</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#Generative-AI"><span class="toc-number">4.1.2.</span> <span class="toc-text">Generative-AI</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Code"><span class="toc-number">4.2.</span> <span class="toc-text">Code</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#AWS-1"><span class="toc-number">4.2.1.</span> <span class="toc-text">AWS</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#Generative-AI-1"><span class="toc-number">4.2.2.</span> <span class="toc-text">Generative-AI</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Build"><span class="toc-number">4.3.</span> <span class="toc-text">Build</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Test"><span class="toc-number">4.4.</span> <span class="toc-text">Test</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#AWS-2"><span class="toc-number">4.4.1.</span> <span class="toc-text">AWS</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#Generative-AI-2"><span class="toc-number">4.4.2.</span> <span class="toc-text">Generative-AI</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Release"><span class="toc-number">4.5.</span> <span class="toc-text">Release</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Deploy"><span class="toc-number">4.6.</span> <span class="toc-text">Deploy</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Operate"><span class="toc-number">4.7.</span> <span class="toc-text">Operate</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#Generative-AI-3"><span class="toc-number">4.7.1.</span> <span class="toc-text">Generative-AI</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Monitor"><span class="toc-number">4.8.</span> <span class="toc-text">Monitor</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Feedback-Loops-for-your-Team"><span class="toc-number">5.</span> <span class="toc-text">Feedback Loops for your Team</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Feedback-Loops-for-your-Organization"><span class="toc-number">6.</span> <span class="toc-text">Feedback Loops for your Organization</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Conclusion"><span class="toc-number">7.</span> <span class="toc-text">Conclusion</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#References"><span class="toc-number">8.</span> <span class="toc-text">References</span></a></li></ol>
+      </div>
+    
+
+    <div id="share-footer" style="display: none">
+      <ul>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.facebook.com/sharer.php?u=https://selcuksasoglu.com/2025/10/01/feedback-loops/"><i class="fab fa-facebook fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://twitter.com/share?url=https://selcuksasoglu.com/2025/10/01/feedback-loops/&text=Feedback Loops in the Age of AI and Cloud Development"><i class="fab fa-twitter fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.linkedin.com/shareArticle?url=https://selcuksasoglu.com/2025/10/01/feedback-loops/&title=Feedback Loops in the Age of AI and Cloud Development"><i class="fab fa-linkedin fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://pinterest.com/pin/create/bookmarklet/?url=https://selcuksasoglu.com/2025/10/01/feedback-loops/&is_video=false&description=Feedback Loops in the Age of AI and Cloud Development"><i class="fab fa-pinterest fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="mailto:?subject=Feedback Loops in the Age of AI and Cloud Development&body=Check out this article: https://selcuksasoglu.com/2025/10/01/feedback-loops/"><i class="fa-solid fa-envelope fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://getpocket.com/save?url=https://selcuksasoglu.com/2025/10/01/feedback-loops/&title=Feedback Loops in the Age of AI and Cloud Development"><i class="fab fa-get-pocket fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://reddit.com/submit?url=https://selcuksasoglu.com/2025/10/01/feedback-loops/&title=Feedback Loops in the Age of AI and Cloud Development"><i class="fab fa-reddit fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.stumbleupon.com/submit?url=https://selcuksasoglu.com/2025/10/01/feedback-loops/&title=Feedback Loops in the Age of AI and Cloud Development"><i class="fab fa-stumbleupon fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://digg.com/submit?url=https://selcuksasoglu.com/2025/10/01/feedback-loops/&title=Feedback Loops in the Age of AI and Cloud Development"><i class="fab fa-digg fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.tumblr.com/share/link?url=https://selcuksasoglu.com/2025/10/01/feedback-loops/&name=Feedback Loops in the Age of AI and Cloud Development&description="><i class="fab fa-tumblr fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://news.ycombinator.com/submitlink?u=https://selcuksasoglu.com/2025/10/01/feedback-loops/&t=Feedback Loops in the Age of AI and Cloud Development"><i class="fab fa-hacker-news fa-lg" aria-hidden="true"></i></a></li>
+</ul>
+
+    </div>
+
+    <div id="actions-footer">
+        <a id="menu" class="icon" href="#" onclick="$('#nav-footer').toggle();return false;"><i class="fa-solid fa-bars fa-lg" aria-hidden="true"></i> Menu</a>
+        
+          <a id="toc" class="icon" href="#" onclick="$('#toc-footer').toggle();return false;"><i class="fa-solid fa-list fa-lg" aria-hidden="true"></i> TOC</a>
+        
+        <a id="share" class="icon" href="#" onclick="$('#share-footer').toggle();return false;"><i class="fa-solid fa-share-alt fa-lg" aria-hidden="true"></i> Share</a>
+        <a id="top" style="display:none" class="icon" href="#" onclick="$('html, body').animate({ scrollTop: 0 }, 'fast');"><i class="fa-solid fa-chevron-up fa-lg" aria-hidden="true"></i> Top</a>
+    </div>
+
+  </div>
+</div>
+
+        
+        <footer id="footer">
+  <div class="footer-left">
+    Copyright &copy;
+    
+    
+    2014-2025
+    Selcuk Sasoglu
+  </div>
+  <div class="footer-right">
+    <nav>
+      <ul>
+        <!--
+       --><li><a href="/">Home</a></li><!--
+     --><!--
+       --><li><a href="/speaking/">Speaking</a></li><!--
+     --><!--
+       --><li><a href="/about/">About</a></li><!--
+     --><!--
+       --><li><a href="/archives/">Writing</a></li><!--
+     --><!--
+       --><li><a target="_blank" rel="noopener" href="https://github.com/ssasoglu">Projects</a></li><!--
+     -->
+      </ul>
+    </nav>
+  </div>
+</footer>
+
+    </div>
+    <!-- styles -->
+
+
+
+  <link rel="preload" as="style" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" crossorigin="anonymous" onload="this.onload=null;this.rel='stylesheet'"/>
+
+
+    <!-- jquery -->
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js" crossorigin="anonymous"></script>
+
+
+
+
+<!-- clipboard -->
+
+  
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/clipboard.js/2.0.7/clipboard.min.js" crossorigin="anonymous"></script>
+  
+  <script type="text/javascript">
+  $(function() {
+    // copy-btn HTML
+    var btn = "<span class=\"btn-copy tooltipped tooltipped-sw\" aria-label=\"Copy to clipboard!\">";
+    btn += '<i class="fa-regular fa-clone"></i>';
+    btn += '</span>';
+    // mount it!
+    $(".highlight table").before(btn);
+    var clip = new ClipboardJS('.btn-copy', {
+      text: function(trigger) {
+        return Array.from(trigger.nextElementSibling.querySelectorAll('.code')).reduce((str,it)=>str+it.innerText+'\n','')
+      }
+    });
+    clip.on('success', function(e) {
+      e.trigger.setAttribute('aria-label', "Copied!");
+      e.clearSelection();
+    })
+  })
+  </script>
+
+
+<script src="/js/main.js"></script>
+
+<!-- search -->
+
+<!-- Baidu Analytics -->
+
+<!-- Cloudflare Analytics -->
+
+  <script defer src='https://static.cloudflareinsights.com/beacon.min.js' data-cf-beacon='{"token": "9112ad25ff1c47ba8fa90bea13ceeff2"}'></script>
+
+<!-- Disqus Comments -->
+
+    <script type="text/javascript">
+        var disqus_shortname = 'selcuksasoglu';
+
+        (function(){
+            var dsq = document.createElement('script');
+            dsq.type = 'text/javascript';
+            dsq.async = true;
+            dsq.src = '//' + disqus_shortname + '.disqus.com/embed.js';
+            (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+        }());
+    </script>
+
+<!-- utterances Comments -->
+
+</body>
+</html>
